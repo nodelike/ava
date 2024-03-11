@@ -1,0 +1,18 @@
+{
+  "name": "ava",
+  "version": "1.0.0",
+  "description": "An Electron application interfacing with a Python script.",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^latest"
+  },
+  "devDependencies": {
+    "electron": "^29.1.1"
+  }
+}
+

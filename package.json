@@ -9,10 +9,10 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
-    "electron": "^latest"
+    "electron": "^latest",
+    "marked": "^12.0.1"
   },
   "devDependencies": {
     "electron": "^29.1.1"
   }
 }
-

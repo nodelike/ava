@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ava</title>
+    <title>AVA</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div class="left-col">
         <div class="chat-container">
             <div id="chat-window">
-                <div class="message system">Hello! How can I help you?</div>
-                <div id="response"></div>
+                <div class="msg-window">
+                  <img class="chat-dp" src="system.jpg" alt="">
+                  <div class="msg-container">
+                    <h3>AVA</h3>
+                    <div class="message system">Hey Baby!</div>
+                  </div>
+                </div>
             </div>
             <div class="input-window">
-                <input id="input" type="text" placeholder="Send message">
+                <input id="input" type="text" placeholder="Send message" autofocus>
                 <button id="send" onclick="sendMessage()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>                    
                 </button>
@@ -20,6 +27,16 @@
         </div>
     </div>
     <div class="right-col">
+      <input type="file" id="file-input" accept="image/*" style="display: none;">
+      <span class="setting-span">
+        <div>Change user pic:</div>
+        <img src="user.png" alt="" class="settings-dp">
+      </span>
+
+      <span class="setting-span">
+        <div>Change AVA pic:</div>
+        <img src="system.jpg" alt="" class="settings-dp">
+      </span>
 
     </div>
 

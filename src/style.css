@@ -5,7 +5,7 @@
 
 :root {
     --primary-color: black;
-    --secondary-color: #0a0a0a;
+    --secondary-color: #242424;
     --accent-color: #2e2e2e;
     --font-color: #fff;
 }
@@ -15,7 +15,7 @@ body {
     box-sizing: border-box;
     width: 100%;
     height: 100vh;
-    /* overflow: hidden; */
+    overflow: hidden;
     margin: 0;
     background: var(--primary-color);
     color: var(--font-color);
@@ -31,42 +31,90 @@ body {
 
 .right-col {
     width: 100%;
-    max-width: 300px;
+    max-width: 349px;
     height: 100%;
     border-left: 1px solid var(--accent-color);
+    padding: 20px 40px;
+}
+
+.setting-span{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.settings-dp {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--font-color);
+    cursor: pointer;
 }
 
 .chat-container{
-    background: var(--secondary-color);
     display: flex;
     flex-direction: column;
     border-left: 1px solid var(--accent-color);
     border-right: 1px solid var(--accent-color);
-    max-width: 550px;
-    width: calc(100% - 40px);
+    max-width: 800px;
+    width: calc(80% - 40px);
     height: 100%;
-    padding: 10px 20px;
+    padding: 10px 30px;
+    padding-top: 20px;
     justify-content: space-between;
 }
 
-.chat-window {
+#chat-window {
+    overflow-y: scroll;
+}
+
+.msg-window {
+    display: flex;
+    margin-bottom: 15px;
+    gap: 20px;
+}
+
+
+
+.chat-dp {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--font-color);
+}
+
+.msg-container {
+    background: var(--secondary-color);
+    width: 100%;
     border: 1px solid var(--accent-color);
-    
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 8px 12px;
+    flex: 1;
+}
+
+.msg-container h3 {
+    margin: 4px;
 }
 
 .message {
-    border: 1px solid var(--accent-color);
     font-size: 14px;
-    padding: 5px 10px;
+    border: none;
+    padding-left: 4px;
     margin: 10px 0;
 }
 
 .input-window{
+    background: var(--primary-color);
     display: flex;
     border: 1px solid var(--accent-color);
     border-radius: 5px;
     justify-content: space-between;
-    padding: 8px;
+    padding: 10px 14px;
 }
 
 .input-window input{
@@ -74,6 +122,7 @@ body {
     width: 100%;
     margin-right: 10px;
     background: transparent;
+    color: var(--font-color);
 }
 
 input:focus{

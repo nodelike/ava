@@ -9,7 +9,7 @@ from queue import Queue
 logging.getLogger("transformers.configuration_utils").setLevel(logging.ERROR)
 logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
 
-tmodel = "sam"
+tmodel = "mia"
 smodel = TTS(language='EN', device="cpu")
 speaker_ids = smodel.hps.data.spk2id
 

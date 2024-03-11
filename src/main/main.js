@@ -1,6 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const { spawn } = require('child_process');
 
 let mainWindow;
 
@@ -22,28 +21,10 @@ function createWindow() {
         mainWindow = null;
     });
 
-    // Start the Python script
-    const pythonPath = path.join(__dirname, '..', '..', 'python', 'stream_script.py');
-    const pythonProcess = spawn('python', [pythonPath]);
-
-    pythonProcess.stdout.on('data', (data) => {
-        // Handle data from Python script here
-        console.log(`Data from Python: ${data}`);
-        mainWindow.webContents.send('python-data', data.toString());
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-        console.error(`Error from Python: ${data}`);
-    });
-
-    pythonProcess.on('close', (code) => {
-        console.log(`Python script exited with code ${code}`);
-    });
 }
 
 app.whenReady().then(createWindow);
 
-// Quit when all windows are closed.
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();

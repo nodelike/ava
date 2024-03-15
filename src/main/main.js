@@ -10,7 +10,8 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
-        }
+        },
+        icon: path.join(__dirname, '../assets/icon.ico')
     });
 
     mainWindow.loadFile(path.join(__dirname, '..', 'index.html'));

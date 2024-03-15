@@ -1,10 +1,44 @@
 let dpPath = { user: "user.png", system: "system.jpg"}
+let messages = [];
 
 function refreshDp() {
     document.querySelectorAll('.chat-dp').forEach(function(img) {
         var role = img.closest('.msg-window').querySelector('.message').classList.contains('user') ? 'user' : 'system';
         img.src = dpPath[role];
     });
+}
+
+function updateMemory(role){
+    if(role === "user"){
+        const input = document.getElementById("input").value;
+        messages.push({"role":"user", "content": input})
+    } else {
+        const response = document.getElementById("response").textContent;
+        messages.push({"role":"assistant", "content": response});
+    }
+}
+
+function clearHistory() {
+    messages = [];
+    const chatWindow = document.getElementById("chat-window");
+    chatWindow.innerHTML = '';
+}
+
+
+function updateModelDropdown() {
+    fetch('http://localhost:8080/get_models')
+        .then(response => response.json())
+        .then(models => {
+            const modelSelect = document.getElementById('model-list');
+            modelSelect.innerHTML = '';
+            models.forEach(model => {
+                const option = new Option(model, model);
+                modelSelect.add(option);
+            });
+
+            modelSelect.addEventListener('change', clearHistory);
+        })
+        .catch(console.error);
 }
 
 
@@ -37,6 +71,7 @@ function updateChat(role, message = '') {
 }
 
 function sendMessage() {
+    updateMemory("user")
     const input = document.getElementById("input");
     const inputVal = input.value.trim();
     if (!inputVal) return;
@@ -44,11 +79,15 @@ function sendMessage() {
     updateChat("user", inputVal);
     updateChat("system");
 
+    const enableVoice = document.getElementById("voice").checked;
+    const model = document.getElementById('model-list').value;
+
     const source = new EventSource("http://localhost:8080/stream");
     source.onmessage = event => {
         const responseDiv = document.getElementById("response");
         const chatWindow = document.getElementById("chat-window");
         if (event.data === "end-stream") {
+            updateMemory("system")
             responseDiv.removeAttribute("id");
             source.close();
         } else {
@@ -62,7 +101,26 @@ function sendMessage() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ prompt: inputVal }),
+        body: JSON.stringify({ messages: messages, enable_voice: enableVoice, model: model}),
+    })
+    .then(() => {
+        if (enableVoice) {
+            fetch('http://localhost:8080/audio')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.audio_data) {
+                        const audioBlob = new Blob([Uint8Array.from(atob(data.audio_data), c => c.charCodeAt(0))], { type: 'audio/wav' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audio = new Audio(audioUrl);
+                        audio.play();
+                    } else {
+                        console.log(data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -99,4 +157,8 @@ document.querySelectorAll('.settings-dp').forEach(function(img, index) {
             }
         };
     });
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    updateModelDropdown();
 });

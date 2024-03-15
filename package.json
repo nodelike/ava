@@ -1,16 +1,22 @@
 {
   "name": "ava",
-  "version": "1.0.0",
-  "description": "An Electron application interfacing with a Python script.",
+  "version": "0.6.0",
+  "description": "Interface for AVA",
   "main": "src/main/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder"
   },
-  "author": "Your Name",
+  "author": "NØDE",
   "license": "MIT",
+  "build": {
+    "appId": "com.nodelike.ava",
+    "productName": "AVA",
+    "mac": {
+      "icon": "src/assets/icon.icns"
+    }
+  },
   "dependencies": {
-    "electron": "^latest",
-    "marked": "^12.0.1"
   },
   "devDependencies": {
     "electron": "^29.1.1"

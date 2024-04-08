@@ -16,9 +16,11 @@
       "icon": "src/assets/icon.icns"
     }
   },
-  "dependencies": {
-  },
   "devDependencies": {
     "electron": "^29.1.1"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "ps-node": "^0.1.6"
   }
 }

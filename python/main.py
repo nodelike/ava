@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 import ollama
 from melo.api import TTS
+import numpy as np
 
 logging.getLogger("transformers.configuration_utils").setLevel(logging.ERROR)
 logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
@@ -34,7 +35,7 @@ def chat_endpoint():
         data = request.json
         messages = data.get('messages', [])
         enable_voice = data.get('enable_voice', False)
-        model = data.get('model', 'ava')
+        model = data.get('model', 'dolphin-mistral')
         response = ""
         try:
             for part in ollama.chat(model, messages=messages, stream=True):
@@ -74,4 +75,5 @@ def get_audio():
     return jsonify(audio_data=audio_data) if audio_data else jsonify(message="No audio data available")
 
 if __name__ == '__main__':
-    app.run(port=8080, debug=True)
+    # print("Server is ready")
+    app.run(port=8080)

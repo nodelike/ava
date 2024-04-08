@@ -14,13 +14,28 @@
     "productName": "AVA",
     "mac": {
       "icon": "src/assets/icon.icns"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "src/assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "installerIcon": "src/assets/icon.ico",
+      "uninstallerIcon": "src/assets/icon.ico",
+      "uninstallDisplayName": "AVA",
+      "allowToChangeInstallationDirectory": true
     }
   },
   "devDependencies": {
-    "electron": "^29.1.1"
-  },
-  "dependencies": {
-    "child_process": "^1.0.2",
-    "ps-node": "^0.1.6"
+    "electron": "^29.1.1",
+    "electron-builder": "^24.13.3"
   }
 }

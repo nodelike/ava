@@ -19,16 +19,22 @@ function clearHistory() {
     document.getElementById("chat-window").innerHTML = '';
 }
 
-function updateModelDropdown() {
-    fetch('http://localhost:8080/get_models')
-        .then(response => response.json())
-        .then(models => {
-            const modelSelect = document.getElementById('model-list');
-            modelSelect.innerHTML = '';
-            models.forEach(model => modelSelect.add(new Option(model, model)));
-            modelSelect.addEventListener('change', clearHistory);
-        })
-        .catch(console.error);
+async function updateModelDropdown() {
+    try {
+      const response = await window.ollamaAPI.list();
+      const modelSelect = document.getElementById('model-list');
+      modelSelect.innerHTML = '';
+  
+      if (response && response.models && Array.isArray(response.models)) {
+        response.models.forEach(model => modelSelect.add(new Option(model.name, model.name)));
+      } else {
+        console.warn('Unexpected response from ollama.list():', response);
+      }
+  
+      modelSelect.addEventListener('change', clearHistory);
+    } catch (error) {
+      console.error('Error:', error);
+    }
 }
 
 function editSystemPrompt(promptName) {
@@ -113,21 +119,31 @@ function updateChat(role, message = '') {
     const persona = document.getElementById('system-prompt-list').options[document.getElementById('system-prompt-list').selectedIndex].text.trim();
     msgWindow.className = "msg-window";
     msgWindow.innerHTML = `
-        <img class="chat-dp ${role}" src="${dpPath[role]}">
-        <div class="msg-container">
-            <h3>${role === "user" ? "You" : persona}</h3>
-            <div class="message ${role}" ${role !== "user" && !document.getElementById("response") ? 'id="response"' : ''}>${message}</div>
-        </div>
+      <img class="chat-dp ${role}" src="${dpPath[role]}">
+      <div class="msg-container">
+        <h3>${role === "user" ? "You" : persona}</h3>
+        <div class="message ${role}" ${role === "system" ? 'id="response"' : ''}>${message}</div>
+      </div>
     `;
+
+    // Remove any existing response div
+    const existingResponseDiv = document.getElementById("response");
+    if (existingResponseDiv) {
+      existingResponseDiv.parentNode.parentNode.remove();
+    }
+
     chatWindow.appendChild(msgWindow);
     chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+  
+    if (role === "system") {
+      return msgWindow.querySelector('.message');
+    }
 }
 
-function sendMessage() {
+async function sendMessage() {
     const systemPrompt = document.getElementById('system-prompt-box').value.trim();
     const input = document.getElementById("input");
     const inputVal = input.value.trim();
-    const enableVoice = document.getElementById("voice").checked;
     const model = document.getElementById('model-list').value;
 
     if (systemPrompt) {
@@ -145,49 +161,28 @@ function sendMessage() {
     input.value = "";
     
     updateChat("user", inputVal);
-    updateChat("system");
-    
+    const responseDiv = updateChat("system");
 
-    const source = new EventSource("http://localhost:8080/stream");
-    source.onmessage = event => {
-        const responseDiv = document.getElementById("response");
+    try {
         const chatWindow = document.getElementById("chat-window");
-        if (event.data === "end-stream") {
-            updateMemory("assistant");
-            responseDiv.removeAttribute("id");
-            source.close();
-        } else {
-            const formattedMessage = event.data.replace(/\n/g, '<br>');
-            responseDiv.innerHTML += formattedMessage;
-            chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
-        }
-    };
 
-    fetch('http://localhost:8080/chat', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ messages: messages, enable_voice: enableVoice, model: model }),
-    })
-    .then(() => {
-        if (enableVoice) {
-            fetch('http://localhost:8080/audio')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.audio_data) {
-                        const audioBlob = new Blob([Uint8Array.from(atob(data.audio_data), c => c.charCodeAt(0))], { type: 'audio/wav' });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        const audio = new Audio(audioUrl);
-                        audio.play();
-                    } else {
-                        console.log(data.message);
-                    }
-                })
-                .catch(console.error);
-        }
-    })
-    .catch(console.error);
+        window.ollamaAPI.onChatResponse((event, content) => {
+        responseDiv.innerHTML += content;
+        chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+        });
+
+        window.ollamaAPI.onChatEnd(() => {
+        updateMemory("assistant");
+        });
+
+        window.ollamaAPI.onChatError((event, errorMessage) => {
+        console.error('Error:', errorMessage);
+        });
+
+        await window.ollamaAPI.chat(model, messages);
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
 
 function adjustTextareaHeight(textarea) {

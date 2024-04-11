@@ -27,39 +27,6 @@
                   <div class="message system">Hey there!</div>
                 </div>
               </div>
-              <div class="msg-window">
-                <img class="chat-dp system" src="system.jpg">
-                <div class="msg-container">
-                  <h3>Dolphin</h3>
-                  <div class="message system">I will write a Python program that performs a simple binary search for sorted lists. This algorithm will divide the list into two halves and narrow down the search range by comparing the target value to the middle element of the list. If the target is found, the position is returned; otherwise, the process is repeated on the appropriate half.
-          
-          <pre class="code-block language-python" tabindex="0"><code class=" language-python">
-          <span class="token keyword">def</span> <span class="token function">binary_search</span><span class="token punctuation">(</span>lst<span class="token punctuation">,</span> target<span class="token punctuation">)</span><span class="token punctuation">:</span>
-              low <span class="token operator">=</span> <span class="token number">0</span>
-              high <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span>
-          
-              <span class="token keyword">while</span> low <span class="token operator">&lt;=</span> high<span class="token punctuation">:</span>
-                  mid <span class="token operator">=</span> <span class="token punctuation">(</span>low <span class="token operator">+</span> high<span class="token punctuation">)</span> <span class="token operator">//</span> <span class="token number">2</span>
-                  <span class="token keyword">if</span> lst<span class="token punctuation">[</span>mid<span class="token punctuation">]</span> <span class="token operator">==</span> target<span class="token punctuation">:</span>
-                      <span class="token keyword">return</span> mid
-                  <span class="token keyword">elif</span> lst<span class="token punctuation">[</span>mid<span class="token punctuation">]</span> <span class="token operator">&lt;</span> target<span class="token punctuation">:</span>
-                      low <span class="token operator">=</span> mid <span class="token operator">+</span> <span class="token number">1</span>
-                  <span class="token keyword">else</span><span class="token punctuation">:</span>
-                      high <span class="token operator">=</span> mid <span class="token operator">-</span> <span class="token number">1</span>
-          
-              <span class="token comment"># If the target is not found, return None</span>
-              <span class="token keyword">return</span> <span class="token boolean">None</span>
-          </code></pre>
-          
-          You can use this function as follows to search a sorted list for a target value.
-          
-          <pre class="code-block language-python" tabindex="0"><code class=" language-python">
-          nums <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">]</span>
-          <span class="token keyword">print</span><span class="token punctuation">(</span>binary_search<span class="token punctuation">(</span>nums<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-          <span class="token comment"># Output: 4</span>
-          </code></pre></div>
-                </div>
-              </div>
           </div>
           <div class="input-window">
             <input id="input" type="text" placeholder="Send message" autofocus>

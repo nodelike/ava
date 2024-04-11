@@ -48,6 +48,28 @@ async function updateModelDropdown() {
     }
 }
 
+function loadSelectedOptions() {
+    const selectedModel = localStorage.getItem('selectedModel');
+    const selectedPersona = localStorage.getItem('selectedPersona');
+
+    if (selectedModel) {
+        document.getElementById('model-list').value = selectedModel;
+    }
+
+    if (selectedPersona) {
+        document.getElementById('system-prompt-list').value = selectedPersona;
+        document.getElementById('system-prompt-box').value = selectedPersona;
+        adjustTextareaHeight(document.getElementById('system-prompt-box'));
+    }
+}
+
+function saveSelectedOptions() {
+    const selectedModel = document.getElementById('model-list').value;
+    const selectedPersona = document.getElementById('system-prompt-list').value;
+    localStorage.setItem('selectedModel', selectedModel);
+    localStorage.setItem('selectedPersona', selectedPersona);
+}
+
 function editSystemPrompt(promptName) {
     const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
     const promptToEdit = savedPrompts.find(prompt => prompt.name === promptName);
@@ -105,7 +127,14 @@ function saveSystemPrompt() {
       promptNameInput.value = promptInput.value = '';
       promptNameInput.readOnly = false;
     }
-  }
+}
+
+function clearPromptInputs() {
+    document.getElementById('prompt-name-input').value = '';
+    document.getElementById('prompt-input').value = '';
+    document.getElementById('prompt-name-input').readOnly = false;
+    adjustTextareaHeight(document.getElementById('prompt-input'));
+}
 
 function deleteSystemPrompt(promptName) {
     const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
@@ -122,6 +151,8 @@ function deleteSystemPrompt(promptName) {
         systemPromptBox.value = systemPromptList.value;
         adjustTextareaHeight(systemPromptBox);
     }
+
+    clearPromptInputs();
 }
 
 function toggleButtons() {
@@ -282,19 +313,26 @@ document.querySelectorAll('.settings-dp').forEach((img, index) => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateModelDropdown();
+document.addEventListener('DOMContentLoaded', async () => {
+    await updateModelDropdown();
     loadSystemPrompts();
+    loadSelectedOptions();
     document.getElementById('system-prompt-box').value = document.getElementById('system-prompt-list').value;
     
     adjustTextareaHeight(document.getElementById('system-prompt-box'));
 
+    document.getElementById('model-list').addEventListener('change', function() {
+        clearHistory();
+        saveSelectedOptions();
+    });
+    
     document.getElementById('system-prompt-list').addEventListener('change', function() {
         const systemPromptBox = document.getElementById('system-prompt-box');
         systemPromptBox.value = this.value;
         adjustTextareaHeight(systemPromptBox);
         clearHistory();
-        messages = []
+        messages = [];
+        saveSelectedOptions();
     });
 
     document.getElementById('prompt-input').addEventListener('input', function() {
@@ -310,4 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('save-prompt-btn').addEventListener('click', saveSystemPrompt);
+
+    document.getElementById('clear-btn').addEventListener('click', clearPromptInputs);
 });

@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="https://kit.fontawesome.com/feaaf8de4f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-markup.min.js"></script>
   </head>
   <body>
     <div class="left-col">
@@ -21,24 +27,62 @@
                   <div class="message system">Hey there!</div>
                 </div>
               </div>
+              <div class="msg-window">
+                <img class="chat-dp system" src="system.jpg">
+                <div class="msg-container">
+                  <h3>Dolphin</h3>
+                  <div class="message system">I will write a Python program that performs a simple binary search for sorted lists. This algorithm will divide the list into two halves and narrow down the search range by comparing the target value to the middle element of the list. If the target is found, the position is returned; otherwise, the process is repeated on the appropriate half.
+          
+          <pre class="code-block language-python" tabindex="0"><code class=" language-python">
+          <span class="token keyword">def</span> <span class="token function">binary_search</span><span class="token punctuation">(</span>lst<span class="token punctuation">,</span> target<span class="token punctuation">)</span><span class="token punctuation">:</span>
+              low <span class="token operator">=</span> <span class="token number">0</span>
+              high <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>lst<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span>
+          
+              <span class="token keyword">while</span> low <span class="token operator">&lt;=</span> high<span class="token punctuation">:</span>
+                  mid <span class="token operator">=</span> <span class="token punctuation">(</span>low <span class="token operator">+</span> high<span class="token punctuation">)</span> <span class="token operator">//</span> <span class="token number">2</span>
+                  <span class="token keyword">if</span> lst<span class="token punctuation">[</span>mid<span class="token punctuation">]</span> <span class="token operator">==</span> target<span class="token punctuation">:</span>
+                      <span class="token keyword">return</span> mid
+                  <span class="token keyword">elif</span> lst<span class="token punctuation">[</span>mid<span class="token punctuation">]</span> <span class="token operator">&lt;</span> target<span class="token punctuation">:</span>
+                      low <span class="token operator">=</span> mid <span class="token operator">+</span> <span class="token number">1</span>
+                  <span class="token keyword">else</span><span class="token punctuation">:</span>
+                      high <span class="token operator">=</span> mid <span class="token operator">-</span> <span class="token number">1</span>
+          
+              <span class="token comment"># If the target is not found, return None</span>
+              <span class="token keyword">return</span> <span class="token boolean">None</span>
+          </code></pre>
+          
+          You can use this function as follows to search a sorted list for a target value.
+          
+          <pre class="code-block language-python" tabindex="0"><code class=" language-python">
+          nums <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">]</span>
+          <span class="token keyword">print</span><span class="token punctuation">(</span>binary_search<span class="token punctuation">(</span>nums<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+          <span class="token comment"># Output: 4</span>
+          </code></pre></div>
+                </div>
+              </div>
           </div>
           <div class="input-window">
-              <input id="input" type="text" placeholder="Send message" autofocus>
+            <input id="input" type="text" placeholder="Send message" autofocus>
+            <div id="button-container">
               <button id="send" onclick="sendMessage()">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>                    
+                <i class="fa-solid fa-arrow-up"></i>
               </button>
+              <button id="stop" onclick="stopMessage()" style="display: none;">
+                <i class="fa-solid fa-square"></i>
+              </button>
+            </div>
           </div>
       </div>
     </div>
     <div class="right-col">
       <input type="file" id="file-input" accept="image/*" style="display: none;">
-      <span class="setting-span">
+      <span class="setting-span" style="align-items: center; flex-direction: row;">
         <div>Change user pic:</div>
         <img src="user.png" alt="" class="settings-dp">
       </span>
 
-      <span class="setting-span">
-        <div>Change AVA pic:</div>
+      <span class="setting-span" style="align-items: center; flex-direction: row; border-bottom: 1px solid var(--accent-color); padding-bottom: 20px;">
+        <div>Change system pic:</div>
         <img src="system.jpg" alt="" class="settings-dp">
       </span>
 
@@ -49,13 +93,13 @@
         </div>
       </span> -->
 
-      <span class="setting-span">
+      <span class="setting-span" style="">
         <div>Select model:</div>
         <select name="model" id="model-list"></select>
       </span>
 
-      <span class="setting-span" style="display: block; height: 100%;">
-        <span class="setting-span">
+      <span class="setting-span" style="display: block;">
+        <span class="setting-span" style="padding: 0;">
           <div>Persona (system prompt):</div>
           <select name="system-prompt" id="system-prompt-list"></select>
         </span>

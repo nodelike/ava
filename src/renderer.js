@@ -1,5 +1,16 @@
 let dpPath = { user: "user.png", system: "system.jpg" };
 let messages = [];
+let abortController = null;
+let isStreaming = false;
+
+function stopMessage() {
+    if (abortController) {
+        abortController.abort();
+        abortController = null;
+        isStreaming = false; // Update streaming state
+        toggleButtons();
+    }
+}
 
 function refreshDp() {
     document.querySelectorAll('.chat-dp').forEach(img => {
@@ -9,8 +20,8 @@ function refreshDp() {
 
 function updateMemory(role) {
     messages.push({
-        role: role,
-        content: role === "user" ? document.getElementById("input").value : document.getElementById("response").textContent
+      role: role,
+      content: role === "user" ? document.getElementById("input").value : document.getElementById("chat-window").lastElementChild.querySelector('.message').textContent
     });
 }
 
@@ -113,6 +124,18 @@ function deleteSystemPrompt(promptName) {
     }
 }
 
+function toggleButtons() {
+    const sendButton = document.getElementById('send');
+    const stopButton = document.getElementById('stop');
+    if (isStreaming) {
+        sendButton.style.display = 'none';
+        stopButton.style.display = 'block';
+    } else {
+        sendButton.style.display = 'block';
+        stopButton.style.display = 'none';
+    }
+}
+
 function updateChat(role, message = '') {
     const chatWindow = document.getElementById("chat-window");
     const msgWindow = document.createElement('div');
@@ -122,20 +145,19 @@ function updateChat(role, message = '') {
       <img class="chat-dp ${role}" src="${dpPath[role]}">
       <div class="msg-container">
         <h3>${role === "user" ? "You" : persona}</h3>
-        <div class="message ${role}" ${role === "system" ? 'id="response"' : ''}>${message}</div>
+        <div class="message ${role}">${message}</div>
       </div>
     `;
-
-    // Remove any existing response div
-    const existingResponseDiv = document.getElementById("response");
-    if (existingResponseDiv) {
-      existingResponseDiv.parentNode.parentNode.remove();
-    }
 
     chatWindow.appendChild(msgWindow);
     chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
   
     if (role === "system") {
+      const codeBlocks = msgWindow.querySelectorAll('.message.system code');
+      codeBlocks.forEach((block) => {
+        block.classList.add('language-python');
+        Prism.highlightElement(block);
+      });
       return msgWindow.querySelector('.message');
     }
 }
@@ -163,25 +185,68 @@ async function sendMessage() {
     updateChat("user", inputVal);
     const responseDiv = updateChat("system");
 
+    isStreaming = true; // Set streaming state to true
+    toggleButtons();
+    abortController = new AbortController();
+    let error = null;
+
     try {
         const chatWindow = document.getElementById("chat-window");
-
-        window.ollamaAPI.onChatResponse((event, content) => {
-        responseDiv.innerHTML += content;
-        chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+        const response = await fetch('http://localhost:11434/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: messages
+          }),
+          signal: abortController.signal
         });
-
-        window.ollamaAPI.onChatEnd(() => {
-        updateMemory("assistant");
-        });
-
-        window.ollamaAPI.onChatError((event, errorMessage) => {
-        console.error('Error:', errorMessage);
-        });
-
-        await window.ollamaAPI.chat(model, messages);
-    } catch (error) {
-        console.error('Error:', error);
+    
+        const reader = response.body.getReader();
+        let content = '';
+    
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+    
+          const chunk = new TextDecoder().decode(value);
+          const lines = chunk.split('\n').filter(Boolean);
+    
+          for (const line of lines) {
+            const data = JSON.parse(line);
+    
+            if (data.message && data.message.content) {
+              content += data.message.content;
+              const formattedContent = content.replace(/```(\w+)([\s\S]*?)```/g, '<pre class="code-block"><code class="language-$1">$2</code></pre>');
+              responseDiv.innerHTML = formattedContent;
+              Prism.highlightAll();
+              chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+            }
+    
+            if (data.done) {
+              updateMemory("assistant");
+              isStreaming = false;
+              toggleButtons();
+              break;
+            }
+          }
+        }
+    } catch (err) {
+        error = err;
+        isStreaming = false; // Set streaming state to false
+        if (error.name === 'AbortError') {
+            console.log('Request aborted');
+            toggleButtons();
+        } else {
+            console.error('Error:', error);
+        }
+    } finally {
+        abortController = null;
+        if (!error || error.name !== 'AbortError') {
+            toggleButtons();
+        }
     }
 }
 

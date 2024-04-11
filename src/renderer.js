@@ -1,7 +1,26 @@
+
+
 let dpPath = { user: "user.png", system: "system.jpg" };
 let messages = [];
 let abortController = null;
 let isStreaming = false;
+// const osimages = ['os-face.gif', 'os-face1.gif', 'os-face2.gif', 'os-face3.gif', 'os-face4.gif', 'os-face5.gif'];
+const osimages = ['os-face1.gif'];
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function setRandomBackgroundImage() {
+    const container = document.getElementById("left-col")
+    const shuffledImages = shuffleArray(osimages);
+    const randomImage = shuffledImages[0];
+    container.style.backgroundImage = `url('assets/os-faces/${randomImage}')`;
+}
 
 function stopMessage() {
     if (abortController) {
@@ -193,6 +212,17 @@ function updateChat(role, message = '') {
     }
 }
 
+async function updateSystemStats() {
+    const stats = await window.ipcRenderer.invoke('get-system-stats');
+  
+    document.getElementById('cpu-usage').textContent = `${stats.cpuUsage}%`;
+    document.getElementById('cpu-temp').textContent = `${stats.cpuTemp}°C`;
+    document.getElementById('mem-usage').textContent = `${stats.memInfo.usedMemMb} MB`;
+    document.getElementById('mem-total').textContent = `${stats.memInfo.totalMemMb} MB`;
+    document.getElementById('battery-level').textContent = `${stats.batteryInfo.percent}%`;
+    document.getElementById('battery-charging').textContent = stats.batteryInfo.isCharging ? 'Yes' : 'No';
+}
+
 async function sendMessage() {
     const systemPrompt = document.getElementById('system-prompt-box').value.trim();
     const input = document.getElementById("input");
@@ -314,6 +344,7 @@ document.querySelectorAll('.settings-dp').forEach((img, index) => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
+    setRandomBackgroundImage()
     await updateModelDropdown();
     loadSystemPrompts();
     loadSelectedOptions();
@@ -350,4 +381,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('save-prompt-btn').addEventListener('click', saveSystemPrompt);
 
     document.getElementById('clear-btn').addEventListener('click', clearPromptInputs);
+
+    setInterval(updateSystemStats, 5000);
 });

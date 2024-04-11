@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const ollama = require('ollama');
+const os = require('node-os-utils');
+
 
 let mainWindow;
 
@@ -55,6 +57,24 @@ ipcMain.handle('ollama:chat', async (event, { model, messages }) => {
     console.error('Error:', error);
     event.sender.send('ollama:chat-error', error.message);
   }
+});
+
+ipcMain.handle('get-system-stats', async () => {
+  const cpu = os.cpu;
+  const mem = os.mem;
+  const battery = os.battery;
+
+  const cpuUsage = await cpu.usage();
+  const cpuTemp = await cpu.temperature();
+  const memInfo = await mem.info();
+  const batteryInfo = await battery.info();
+
+  return {
+    cpuUsage,
+    cpuTemp,
+    memInfo,
+    batteryInfo,
+  };
 });
 
 app.on('ready', () => {

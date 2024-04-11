@@ -19,9 +19,14 @@
   background-color: #555; /* Color of the thumb on hover */
 }
 
+::placeholder {
+  color: #e3e3e3;
+}
+
+
 :root {
-    --primary-color: black;
-    --secondary-color: #242424;
+    --primary-color: rgba(0, 0, 0, 0.1);
+    --secondary-color: rgba(0, 0, 0, 0.5);
     --accent-color: #3f3f3f;
     --font-color: #fff;
 }
@@ -40,7 +45,7 @@ body {
 select, .right-col input {
   background: var(--secondary-color);
   border: 1px solid var(--accent-color);
-  color: var(--font-color);
+  color: #00ffb8;
   border-radius: 8px;
   padding: 10px 10px;
   outline: none;
@@ -54,11 +59,16 @@ select, .right-col input {
 }
 
 .left-col{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+  background-image: url(assets/os-faces/os-face.gif);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn {
@@ -66,6 +76,7 @@ select, .right-col input {
   color: var(--font-color);
   padding: 12px 20px;
   border: 2px solid var(--secondary-color);
+  border-radius: 6px;
   cursor: pointer;
   transition: 0.1s ease-in;
 }
@@ -84,10 +95,10 @@ select, .right-col input {
   height: 50px;
   justify-content: center;
   align-items: center;
+  border: 2px solid var(--accent-color);
   border-radius: 50%;
-  background: var(--primary-color);
+  background: var(--secondary-color);
   color: var(--font-color);
-  filter: invert(1);
   cursor: pointer;
 }
 
@@ -97,6 +108,7 @@ select, .right-col input {
 }
 
 .right-col {
+  background: var(--secondary-color);
   width: 100%;
   max-width: 349px;
   height: 100%;
@@ -196,7 +208,7 @@ select, .right-col input {
 #system-prompt-box {
   margin-bottom: 15px;
   background: var(--secondary-color);
-  color: #ffc370;
+  color: var(--font-color);
   width: 100%;
   max-height: 420px;
   overflow-y: auto;
@@ -208,15 +220,16 @@ select, .right-col input {
   line-height: 1.3em;
 }
 
-
 .chat-container{
+  background: var(--primary-color);
+  backdrop-filter: blur(0.3em);
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--accent-color);
-  border-right: 1px solid var(--accent-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 12px;
   max-width: 800px;
   width: calc(80% - 40px);
-  height: 100%;
+  height: 90%;
   padding: 10px 0px;
   padding-top: 20px;
   justify-content: space-between;
@@ -240,11 +253,12 @@ select, .right-col input {
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
-  border: 2px solid var(--font-color);
+  border: 2px solid var(--accent-color);
 }
 
 .msg-container {
   background: var(--secondary-color);
+  backdrop-filter: blur(1.5rem);
   width: 50%;
   border: 1px solid var(--accent-color);
   border-radius: 6px;
@@ -254,13 +268,15 @@ select, .right-col input {
 }
 
 .msg-container h3 {
-    margin: 8px 4px;
-    margin-bottom: 15px;
-    text-decoration: underline;
+  color: var(--font-color);
+  margin: 8px 4px;
+  margin-bottom: 15px;
+  text-decoration: underline;
 }
 
 .message {
     font-size: 14px;
+    color: var(--font-color);
     border: none;
     padding-left: 4px;
     margin: 10px 0;
@@ -269,14 +285,15 @@ select, .right-col input {
 
 .code-block {
   padding-top: 0 !important;
-  padding-bottom: 1.5em !important;
-  background: var(--primary-color) !important;
-  border: 1px solid var(--accent-color);
-  border-radius: 10px;
+    padding-bottom: 1.5em !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid var(--accent-color);
+    border-radius: 10px;
 }
 
 .input-window{
-    background: var(--primary-color);
+    background: var(--secondary-color);
+    backdrop-filter: blur(1.5rem);
     display: flex;
     border: 1px solid var(--accent-color);
     border-radius: 5px;
@@ -306,7 +323,7 @@ input:focus{
     padding: 0;
     height: 30px;
     width: 32px;
-    background: transparent;
+    background: black;
     border: 1px solid var(--accent-color);
     border-radius: 4px;
     cursor: pointer;
@@ -328,14 +345,15 @@ input:focus{
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--primary-color);
+  backdrop-filter: blur(1.2em);
 }
 
 .popup-content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color);
   padding: 25px 35px;
   border: 2px solid var(--accent-color);
   border-radius: 12px;
@@ -356,8 +374,8 @@ input:focus{
   align-items: center;
   position: absolute;
   color: white;
-  background: transparent;
-  border: 1px solid var(--accent-color);
+  background: var(--secondary-color);
+  border: 2px solid var(--accent-color);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -407,8 +425,9 @@ input:focus{
 #prompt-list li {
   display: flex;
   justify-content: space-between;
-  margin: 5px 5%;
+  margin: 10px 0;
   align-items: center;
+  font-size: 15px;
 }
 
 #prompt-list li button {
@@ -416,6 +435,7 @@ input:focus{
   color: var(--font-color);
   padding: 7px 15px;
   border: 2px solid var(--secondary-color);
+  border-radius: 4px;
   cursor: pointer;
   transition: 0.1s ease-in;
 }

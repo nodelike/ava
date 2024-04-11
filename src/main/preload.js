@@ -1,5 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
+window.ipcRenderer = ipcRenderer;
+
 contextBridge.exposeInMainWorld('ollamaAPI', {
   list: () => ipcRenderer.invoke('ollama:list'),
   chat: (model, messages) => ipcRenderer.invoke('ollama:chat', { model, messages }),

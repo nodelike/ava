@@ -14,10 +14,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-markup.min.js"></script>
   </head>
   <body>
-    <div class="left-col">
+    <div class="left-col" id="left-col">
       <div class="new-chat-btn" onclick="clearHistory()">
         <i class="fa fa-solid fa-plus"></i>
       </div>
+      <div style="background: var(--secondary-color);">
+        <p>CPU Usage: <span id="cpu-usage"></span></p>
+        <p>CPU Temperature: <span id="cpu-temp"></span></p>
+        <p>Memory Usage: <span id="mem-usage"></span> / <span id="mem-total"></span></p>
+        <p>Battery Level: <span id="battery-level"></span></p>
+        <p>Battery Charging: <span id="battery-charging"></span></p>
+      </div>
+
+      <!-- <div class="os-face">
+        <img src="assets/os-face.gif" alt="">
+      </div> -->
       <div class="chat-container">
           <div id="chat-window">
               <div class="msg-window">

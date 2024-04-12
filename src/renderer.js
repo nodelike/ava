@@ -5,6 +5,26 @@ let isStreaming = false;
 // const osimages = ['os-face.gif', 'os-face1.gif', 'os-face2.gif', 'os-face3.gif', 'os-face4.gif', 'os-face5.gif'];
 const osimages = ['os-face1.gif'];
 
+function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    // Convert hours to 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12; // Handle midnight (0 hours)
+    
+    const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+    document.getElementById('clock').textContent = timeString;
+}
+  
+function startClock() {
+    updateClock();
+    setInterval(updateClock, 1000);
+}
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -230,11 +250,12 @@ async function updateSystemStats() {
       }
   
       if (stats.memInfo) {
-        document.getElementById('mem-usage').textContent = `${stats.memInfo.usedMemMb} MB`;
-        document.getElementById('mem-total').textContent = `${stats.memInfo.totalMemMb} MB`;
+        document.getElementById('mem-usage').textContent = `${(stats.memInfo.usedMemMb/1000).toFixed(2)} GB`;
+        document.getElementById('mem-total').textContent = `${(stats.memInfo.totalMemMb/1000).toFixed(2)} GB`;
       }
   
       if (stats.batteryLevel !== undefined) {
+        document.getElementById('battery-level').style.color = stats.isCharging ? "#19ff6a" : stats.batteryLevel > 15 ? "var(--font-color)" : "red"
         document.getElementById('battery-level').textContent = `${stats.batteryLevel}%`;
       }
   
@@ -371,6 +392,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await updateModelDropdown();
     loadSystemPrompts();
     loadSelectedOptions();
+    startClock();
 
     document.getElementById('system-prompt-box').value = document.getElementById('system-prompt-list').value;
     adjustTextareaHeight(document.getElementById('system-prompt-box'));

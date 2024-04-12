@@ -19,10 +19,10 @@
         <div class="chat-container">
           <div class="chat-settings">
             <div class="new-chat-btn" onclick="clearHistory()">
-              <i class="fa fa-solid fa-plus"></i>
+              <i class="fa fa-sharp fa-solid fa-plus"></i>
             </div>
             <div class="settings-btn" onclick="toggleSettings()">
-              <i class="fa fa-solid fa-gear"></i>
+              <i class="fa fa-sharp fa-solid fa-gear"></i>
             </div>
           </div>
             <div id="chat-window">
@@ -48,11 +48,12 @@
         </div>
       </div>
       <div class="col-2">
+        <div id="clock"></div>
         <div class="system-stats glass-card">
+          <p>Battery Level: <span id="battery-level"></span></p>
+          <p>Memory Usage: <span><span id="mem-usage"></span>/<span id="mem-total"></span></span></p>
           <p>CPU Usage: <span id="cpu-usage"></span></p>
           <p>CPU Temperature: <span id="cpu-temp"></span></p>
-          <p>Memory Usage: <span id="mem-usage"></span> / <span id="mem-total"></span></p>
-          <p>Battery Level: <span id="battery-level"></span></p>
           <p>Battery Charging: <span id="battery-charging"></span></p>
         </div>
 

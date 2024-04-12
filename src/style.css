@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Graduate&display=swap');
+
 *{
     box-sizing: border-box;
     font-family: monospace;
@@ -9,6 +11,7 @@
 
 ::-webkit-scrollbar-track {
   background-color: var(--secondary-color); /* Background color of the track */
+  border-radius: 12px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -81,24 +84,49 @@ select, .chat-settings-pane input {
 
 .col-2{
   width: 30%;
-  justify-content: space-around;
+  gap: 30px;
+  justify-content: start;
 }
 
 .glass-card{
+  height: 25%;
+  width: 100%;
   background: var(--secondary-color);
   border: 1px solid var(--accent-color);
   border-radius: 12px;
   padding: 5px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#clock {
+  margin-top: 45px;
+  font-family: "Graduate", serif;
+  font-weight: bold;
+  font-size: 6.5em;
+  text-align: center;
+  color: black;
 }
 
 .system-stats {
   margin: 0 20px;
+  max-width: 360px;
   width: 100%;
+  font-size: 15px;
+  flex-direction: column;
 }
 
 .system-stats p{
+  font-family: "Graduate", serif;
+  font-weight: bold;
+  width: 100%;
   display: flex;
   justify-content: space-between;
+}
+
+.system-stats p span{
+  font-family: "Graduate", serif;
 }
 
 .terminal-card {
@@ -262,7 +290,7 @@ select, .chat-settings-pane input {
 }
 
 .chat-container{
-  background: var(--primary-color);
+  background: var(--secondary-color);
   backdrop-filter: blur(0.3em);
   display: flex;
   flex-direction: column;
@@ -271,8 +299,6 @@ select, .chat-settings-pane input {
   max-width: 800px;
   width: calc(80% - 40px);
   height: 90%;
-  padding: 10px 0px;
-  padding-top: 20px;
   justify-content: space-between;
 }
 
@@ -287,13 +313,14 @@ select, .chat-settings-pane input {
 
 #chat-window {
   overflow-y: scroll;
-  padding: 0 30px;;
+  padding: 0 30px;
+  height: 100%;
+  margin-top: 35px;
+
 }
 
 .msg-window {
   display: flex;
-  margin-bottom: 15px;
-  gap: 20px;
 }
 
 
@@ -304,34 +331,45 @@ select, .chat-settings-pane input {
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid var(--accent-color);
+  margin-bottom: 15px;
 }
 
 .msg-container {
-  background: var(--secondary-color);
-  backdrop-filter: blur(1.5rem);
+  display: flex;
+  gap: 10px;
   width: 50%;
-  border: 1px solid var(--accent-color);
-  border-radius: 6px;
   font-size: 14px;
   padding: 8px 12px;
   flex: 1;
+  padding-top: 0;
 }
 
 .msg-container h3 {
+  font-family: "Graduate", serif;
   color: var(--font-color);
-  margin: 8px 4px;
-  margin-bottom: 15px;
+  margin: 0px 4px;
   text-decoration: underline;
+  font-size: 14px;
+  margin-top: 12px;
 }
 
 .message {
-    font-size: 14px;
-    color: var(--font-color);
-    border: none;
-    padding-left: 4px;
-    margin: 10px 0;
-    white-space: pre-wrap;
+  font-size: 14px;
+  color: #fff;
+  border: none;
+  padding-left: 4px;
+  white-space: pre-wrap;
+  margin-top: 12px;
 }
+
+.message.user{
+  color: #ffd100;
+}
+
+.message.system{
+  color: #19ff6a;
+}
+
 
 .code-block {
   padding-top: 0 !important;
@@ -350,7 +388,7 @@ select, .chat-settings-pane input {
     justify-content: space-between;
     padding: 10px 14px;
     margin: 0 30px;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .input-window input{

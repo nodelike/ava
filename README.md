@@ -2,7 +2,9 @@ ava-os (personal project):
 
 been developing a chat interface for a bigger project of developing an OS with an amazing role playing persona, if that's even possible with llms.
 
-It is inspired by @karpathy's llm OS.
+It is inspired by @karpathy's llm OS:
+
+<img src="src/assets/llmos.png" style="width: 100%;"></img>
 
 Current tech stack: 
 Dolphin-mistral: Quality of uncensored role-playing is good when prompted correctly.

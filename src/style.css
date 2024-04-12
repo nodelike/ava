@@ -42,7 +42,7 @@ body {
     color: var(--font-color);
 }
 
-select, .right-col input {
+select, .chat-settings-pane input {
   background: var(--secondary-color);
   border: 1px solid var(--accent-color);
   color: #00ffb8;
@@ -58,17 +58,52 @@ select, .right-col input {
   background: var(--secondary-color);
 }
 
-.left-col{
+.app{
   background-image: url(assets/os-faces/os-face.gif);
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
   display: flex;
-  flex-direction: column;
   width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.col-1, .col-2{
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.col-2{
+  width: 30%;
+  justify-content: space-around;
+}
+
+.glass-card{
+  background: var(--secondary-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 12px;
+  padding: 5px 15px;
+}
+
+.system-stats {
+  margin: 0 20px;
+  width: 100%;
+}
+
+.system-stats p{
+  display: flex;
+  justify-content: space-between;
+}
+
+.terminal-card {
+  width: 100%;
+  height: 30%;
 }
 
 .btn {
@@ -86,11 +121,8 @@ select, .right-col input {
   background: var(--secondary-color);
 }
 
-.new-chat-btn{
+.new-chat-btn, .settings-btn{
   display: flex;
-  position: absolute;
-  top: 25px;
-  left: 25px;
   width: 50px;
   height: 50px;
   justify-content: center;
@@ -102,33 +134,12 @@ select, .right-col input {
   cursor: pointer;
 }
 
-.new-chat-btn:hover > .fa {
+.new-chat-btn:hover > .fa, .settings-btn:hover > .fa {
   font-size: 22px; /* Change the size as needed */
   transition: font-size 0.1s ease; /* Optional: Adds a smooth transition effect */
 }
 
-.settings-btn {
-  display: flex;
-  position: absolute;
-  top: 95px;
-  left: 25px;
-  width: 50px;
-  height: 50px;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid var(--accent-color);
-  border-radius: 50%;
-  background: var(--secondary-color);
-  color: var(--font-color);
-  cursor: pointer;
-}
-
-.settings-btn:hover > .fa {
-  font-size: 22px;
-  transition: font-size 0.1s ease;
-}
-
-.right-col {
+.chat-settings-pane {
   background: var(--secondary-color);
   width: 100%;
   max-width: 349px;
@@ -142,7 +153,7 @@ select, .right-col input {
 }
 
 
-.right-col.show {
+.chat-settings-pane.show {
   right: 0;
 }
 
@@ -263,6 +274,15 @@ select, .right-col input {
   padding: 10px 0px;
   padding-top: 20px;
   justify-content: space-between;
+}
+
+.chat-settings{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  top: 0;
+  right: -65px;
 }
 
 #chat-window {

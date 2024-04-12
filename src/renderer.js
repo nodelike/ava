@@ -1,5 +1,3 @@
-
-
 let dpPath = { user: "user.png", system: "system.jpg" };
 let messages = [];
 let abortController = null;
@@ -16,7 +14,7 @@ function shuffleArray(array) {
 }
 
 function setRandomBackgroundImage() {
-    const container = document.getElementById("left-col")
+    const container = document.getElementById("app")
     const shuffledImages = shuffleArray(osimages);
     const randomImage = shuffledImages[0];
     container.style.backgroundImage = `url('assets/os-faces/${randomImage}')`;
@@ -50,7 +48,7 @@ function clearHistory() {
 }
 
 function toggleSettings() {
-    const rightCol = document.querySelector('.right-col');
+    const rightCol = document.querySelector('.chat-settings-pane');
     rightCol.classList.toggle('show');
 }
 
@@ -373,8 +371,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await updateModelDropdown();
     loadSystemPrompts();
     loadSelectedOptions();
+
     document.getElementById('system-prompt-box').value = document.getElementById('system-prompt-list').value;
-    
     adjustTextareaHeight(document.getElementById('system-prompt-box'));
 
     document.getElementById('model-list').addEventListener('change', function() {

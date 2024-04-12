@@ -14,48 +14,52 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-markup.min.js"></script>
   </head>
   <body>
-    <div class="left-col" id="left-col">
-      <div class="new-chat-btn" onclick="clearHistory()">
-        <i class="fa fa-solid fa-plus"></i>
-      </div>
-      <div class="settings-btn" onclick="toggleSettings()">
-        <i class="fa fa-solid fa-gear"></i>
-      </div>
-      <div style="background: var(--secondary-color);">
-        <p>CPU Usage: <span id="cpu-usage"></span></p>
-        <p>CPU Temperature: <span id="cpu-temp"></span></p>
-        <p>Memory Usage: <span id="mem-usage"></span> / <span id="mem-total"></span></p>
-        <p>Battery Level: <span id="battery-level"></span></p>
-        <p>Battery Charging: <span id="battery-charging"></span></p>
-      </div>
-
-      <!-- <div class="os-face">
-        <img src="assets/os-face.gif" alt="">
-      </div> -->
-      <div class="chat-container">
-          <div id="chat-window">
-              <div class="msg-window">
-                <img class="chat-dp" src="system.jpg" alt="">
-                <div class="msg-container">
-                  <h3>AVA</h3>
-                  <div class="message system">Hey there!</div>
-                </div>
-              </div>
-          </div>
-          <div class="input-window">
-            <input id="input" type="text" placeholder="Send message" autofocus>
-            <div id="button-container">
-              <button id="send" onclick="sendMessage()">
-                <i class="fa-solid fa-arrow-up"></i>
-              </button>
-              <button id="stop" onclick="stopMessage()" style="display: none;">
-                <i class="fa-solid fa-square"></i>
-              </button>
+    <div class="app" id="app">
+      <div class="col-1">
+        <div class="chat-container">
+          <div class="chat-settings">
+            <div class="new-chat-btn" onclick="clearHistory()">
+              <i class="fa fa-solid fa-plus"></i>
+            </div>
+            <div class="settings-btn" onclick="toggleSettings()">
+              <i class="fa fa-solid fa-gear"></i>
             </div>
           </div>
+            <div id="chat-window">
+                <div class="msg-window">
+                  <img class="chat-dp" src="system.jpg" alt="">
+                  <div class="msg-container">
+                    <h3>AVA</h3>
+                    <div class="message system">Hey there!</div>
+                  </div>
+                </div>
+            </div>
+            <div class="input-window">
+              <input id="input" type="text" placeholder="Send message" autofocus>
+              <div id="button-container">
+                <button id="send" onclick="sendMessage()">
+                  <i class="fa-solid fa-arrow-up"></i>
+                </button>
+                <button id="stop" onclick="stopMessage()" style="display: none;">
+                  <i class="fa-solid fa-square"></i>
+                </button>
+              </div>
+            </div>
+        </div>
       </div>
-    </div>
-    <div class="right-col">
+      <div class="col-2">
+        <div class="system-stats glass-card">
+          <p>CPU Usage: <span id="cpu-usage"></span></p>
+          <p>CPU Temperature: <span id="cpu-temp"></span></p>
+          <p>Memory Usage: <span id="mem-usage"></span> / <span id="mem-total"></span></p>
+          <p>Battery Level: <span id="battery-level"></span></p>
+          <p>Battery Charging: <span id="battery-charging"></span></p>
+        </div>
+
+        <div class="terminal-card glass-card" id="terminal"></div>
+      </div>
+      
+    <div class="chat-settings-pane">
       <input type="file" id="file-input" accept="image/*" style="display: none;">
       <span class="setting-span" style="align-items: center; flex-direction: row;">
         <div>Change user pic:</div>
@@ -88,17 +92,16 @@
         <button class="btn" id="manage-prompts-btn">Edit system prompt</button>
       </span>
 
-    </div>
-
-    <div id="prompt-popup" class="popup">
-      <div class="popup-content">
-        <h2 style="text-align: center;">Edit system prompt</h2>
-        <ol id="prompt-list"></ol>
-        <input type="text" id="prompt-name-input" placeholder="Name of the persona">
-        <textarea type="text" id="prompt-input" placeholder="Enter system prompt" ></textarea>
-        <button class="btn" id="clear-btn">Clear</button>
-        <button class="btn" id="save-prompt-btn">Save</button>
-        <button class="close-btn" id="close-popup-btn"><i class="fa-solid fa-xmark"></i></button>
+      <div id="prompt-popup" class="popup">
+        <div class="popup-content">
+          <h2 style="text-align: center;">Edit system prompt</h2>
+          <ol id="prompt-list"></ol>
+          <input type="text" id="prompt-name-input" placeholder="Name of the persona">
+          <textarea type="text" id="prompt-input" placeholder="Enter system prompt" ></textarea>
+          <button class="btn" id="clear-btn">Clear</button>
+          <button class="btn" id="save-prompt-btn">Save</button>
+          <button class="close-btn" id="close-popup-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
       </div>
     </div>
     <script src="renderer.js"></script>

@@ -9,13 +9,10 @@
   width: 12px; /* Width of the scrollbar */
 }
 
-::-webkit-scrollbar-track {
-  background-color: var(--secondary-color); /* Background color of the track */
-  border-radius: 12px;
-}
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--accent-color); /* Color of the thumb */
+  border-radius: 12px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -46,7 +43,7 @@ body {
 }
 
 select, .chat-settings-pane input {
-  background: var(--secondary-color);
+  background: #292929;
   border: 1px solid var(--accent-color);
   color: #00ffb8;
   border-radius: 8px;
@@ -89,12 +86,11 @@ select, .chat-settings-pane input {
 }
 
 .glass-card{
-  height: 25%;
   width: 100%;
   background: var(--secondary-color);
   border: 1px solid var(--accent-color);
   border-radius: 12px;
-  padding: 5px 15px;
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -123,6 +119,7 @@ select, .chat-settings-pane input {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  margin: 5px;
 }
 
 .system-stats p span{
@@ -138,7 +135,7 @@ select, .chat-settings-pane input {
   background: var(--primary-color);
   color: var(--font-color);
   padding: 12px 20px;
-  border: 2px solid var(--secondary-color);
+  border: 2px solid var(--accent-color);
   border-radius: 6px;
   cursor: pointer;
   transition: 0.1s ease-in;
@@ -168,7 +165,7 @@ select, .chat-settings-pane input {
 }
 
 .chat-settings-pane {
-  background: var(--secondary-color);
+  background: #000;
   width: 100%;
   max-width: 349px;
   height: 100%;
@@ -276,7 +273,7 @@ select, .chat-settings-pane input {
 
 #system-prompt-box {
   margin-bottom: 15px;
-  background: var(--secondary-color);
+  background: #292929;
   color: var(--font-color);
   width: 100%;
   max-height: 420px;
@@ -363,11 +360,11 @@ select, .chat-settings-pane input {
 }
 
 .message.user{
-  color: #ffd100;
+  color: #00ffb8;
 }
 
 .message.system{
-  color: #19ff6a;
+  color: var(--font-color);
 }
 
 

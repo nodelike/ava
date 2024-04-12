@@ -5,6 +5,20 @@ let isStreaming = false;
 // const osimages = ['os-face.gif', 'os-face1.gif', 'os-face2.gif', 'os-face3.gif', 'os-face4.gif', 'os-face5.gif'];
 const osimages = ['os-face1.gif'];
 
+function toggleSettings(event) {
+    event.stopPropagation();
+    const chatSettingsPane = document.querySelector('.chat-settings-pane');
+    chatSettingsPane.classList.toggle('show');
+  }
+  
+function handleDocumentClick(event) {
+    const chatSettingsPane = document.querySelector('.chat-settings-pane');
+    const target = event.target;
+  
+    if (!chatSettingsPane.contains(target)) {
+      chatSettingsPane.classList.remove('show');
+}}
+
 function updateClock() {
     const now = new Date();
     let hours = now.getHours();
@@ -67,10 +81,6 @@ function clearHistory() {
     document.getElementById("chat-window").innerHTML = '';
 }
 
-function toggleSettings() {
-    const rightCol = document.querySelector('.chat-settings-pane');
-    rightCol.classList.toggle('show');
-}
 
 async function updateModelDropdown() {
     try {
@@ -426,6 +436,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('save-prompt-btn').addEventListener('click', saveSystemPrompt);
 
     document.getElementById('clear-btn').addEventListener('click', clearPromptInputs);
+
+    const settingsButton = document.querySelector('#settings-btn');
+    settingsButton.addEventListener('click', toggleSettings);
+
+    document.addEventListener('click', handleDocumentClick);
 
     setInterval(updateSystemStats, 5000);
 });

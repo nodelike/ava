@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const ollama = require('ollama');
 const os = require('node-os-utils');
-
+const si = require('systeminformation');
 
 let mainWindow;
 
@@ -60,21 +60,27 @@ ipcMain.handle('ollama:chat', async (event, { model, messages }) => {
 });
 
 ipcMain.handle('get-system-stats', async () => {
-  const cpu = os.cpu;
-  const mem = os.mem;
-  const battery = os.battery;
+  try {
+    const cpu = os.cpu;
+    const mem = os.mem;
+    const stats = {};
 
-  const cpuUsage = await cpu.usage();
-  const cpuTemp = await cpu.temperature();
-  const memInfo = await mem.info();
-  const batteryInfo = await battery.info();
+    stats.cpuUsage = await cpu.usage();
 
-  return {
-    cpuUsage,
-    cpuTemp,
-    memInfo,
-    batteryInfo,
-  };
+    const cpuTemp = await si.cpuTemperature();
+    stats.cpuTemp = cpuTemp.main;
+
+    stats.memInfo = await mem.info();
+
+    const batteryInfo = await si.battery();
+    stats.batteryLevel = batteryInfo.percent;
+    stats.isCharging = batteryInfo.isCharging;
+    
+    return stats;
+  } catch (error) {
+    console.error('Error retrieving system stats:', error);
+    return null;
+  }
 });
 
 app.on('ready', () => {

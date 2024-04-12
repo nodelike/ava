@@ -107,6 +107,27 @@ select, .right-col input {
   transition: font-size 0.1s ease; /* Optional: Adds a smooth transition effect */
 }
 
+.settings-btn {
+  display: flex;
+  position: absolute;
+  top: 95px;
+  left: 25px;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  background: var(--secondary-color);
+  color: var(--font-color);
+  cursor: pointer;
+}
+
+.settings-btn:hover > .fa {
+  font-size: 22px;
+  transition: font-size 0.1s ease;
+}
+
 .right-col {
   background: var(--secondary-color);
   width: 100%;
@@ -114,6 +135,15 @@ select, .right-col input {
   height: 100%;
   border-left: 1px solid var(--accent-color);
   padding: 20px 0px;
+  position: fixed;
+  top: 0;
+  right: -349px;
+  transition: right 0.3s ease;
+}
+
+
+.right-col.show {
+  right: 0;
 }
 
 .setting-span{

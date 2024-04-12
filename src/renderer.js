@@ -49,6 +49,11 @@ function clearHistory() {
     document.getElementById("chat-window").innerHTML = '';
 }
 
+function toggleSettings() {
+    const rightCol = document.querySelector('.right-col');
+    rightCol.classList.toggle('show');
+}
+
 async function updateModelDropdown() {
     try {
       const response = await window.ollamaAPI.list();
@@ -213,14 +218,34 @@ function updateChat(role, message = '') {
 }
 
 async function updateSystemStats() {
-    const stats = await window.ipcRenderer.invoke('get-system-stats');
+    try {
+      const stats = await window.ipcRenderer.invoke('get-system-stats');
   
-    document.getElementById('cpu-usage').textContent = `${stats.cpuUsage}%`;
-    document.getElementById('cpu-temp').textContent = `${stats.cpuTemp}°C`;
-    document.getElementById('mem-usage').textContent = `${stats.memInfo.usedMemMb} MB`;
-    document.getElementById('mem-total').textContent = `${stats.memInfo.totalMemMb} MB`;
-    document.getElementById('battery-level').textContent = `${stats.batteryInfo.percent}%`;
-    document.getElementById('battery-charging').textContent = stats.batteryInfo.isCharging ? 'Yes' : 'No';
+      if (stats.cpuUsage) {
+        document.getElementById('cpu-usage').textContent = `${stats.cpuUsage}%`;
+      }
+  
+      if (stats.cpuTemp) {
+        document.getElementById('cpu-temp').textContent = `${stats.cpuTemp}°C`;
+      } else{
+        document.getElementById('cpu-temp').textContent = `N/A`;
+      }
+  
+      if (stats.memInfo) {
+        document.getElementById('mem-usage').textContent = `${stats.memInfo.usedMemMb} MB`;
+        document.getElementById('mem-total').textContent = `${stats.memInfo.totalMemMb} MB`;
+      }
+  
+      if (stats.batteryLevel !== undefined) {
+        document.getElementById('battery-level').textContent = `${stats.batteryLevel}%`;
+      }
+  
+      if (stats.isCharging !== undefined) {
+        document.getElementById('battery-charging').textContent = stats.isCharging ? 'Yes' : 'No';
+      }
+    } catch (error) {
+      console.error('Error updating system stats:', error);
+    }
 }
 
 async function sendMessage() {

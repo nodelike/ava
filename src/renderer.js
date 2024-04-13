@@ -1,4 +1,4 @@
-let dpPath = { user: "user.png", system: "system.jpg" };
+let dpPath = { user: "user.png", system: "assets/icon.ico" };
 let messages = [];
 let abortController = null;
 let isStreaming = false;

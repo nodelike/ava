@@ -4,6 +4,65 @@ let abortController = null;
 let isStreaming = false;
 // const osimages = ['os-face.gif', 'os-face1.gif', 'os-face2.gif', 'os-face3.gif', 'os-face4.gif', 'os-face5.gif'];
 const osimages = ['os-face1.gif'];
+let currentSessionId = ''
+
+async function updateChatHistory() {
+  let sessions = [];
+
+  try {
+    const response = await fetch('chat-history.json');
+    if (response.ok) {
+      sessions = await response.json();
+    }
+  } catch (error) {
+    console.log("Failed to fetch chat-history.json");
+  }
+
+  if (currentSessionId == '') {
+    let lastSessionNumber = 0;
+    for (const session of sessions) {
+      const sessionNumber = parseInt(session.session, 10);
+      if (sessionNumber > lastSessionNumber) {
+        lastSessionNumber = sessionNumber;
+      }
+    }
+    currentSessionId = (lastSessionNumber + 1).toString().padStart(3, "0");
+  }
+
+  let currentSession = null;
+  for (const session of sessions) {
+    if (session.session == currentSessionId) {
+      currentSession = session;
+      break;
+    }
+  }
+
+  if (!currentSession) {
+    currentSession = {
+      session: currentSessionId,
+      messages: []
+    };
+    sessions.push(currentSession);
+  }
+
+  currentSession.messages = messages;
+
+  try {
+    await fetch('chat-history.json', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(sessions, null, 2),
+    });
+  } catch (error) {
+    console.error('Error writing to chat-history.json:', error);
+  }
+}
+function toggleChatHistory() {
+    const chatHistoryPane = document.querySelector('.chat-history-pane');
+    chatHistoryPane.classList.toggle('show');
+}
 
 function toggleSettings(event) {
     event.stopPropagation();
@@ -13,11 +72,17 @@ function toggleSettings(event) {
   
 function handleDocumentClick(event) {
     const chatSettingsPane = document.querySelector('.chat-settings-pane');
+    const chatHistoryPane = document.querySelector('.chat-history-pane');
     const target = event.target;
-  
+
     if (!chatSettingsPane.contains(target)) {
-      chatSettingsPane.classList.remove('show');
-}}
+        chatSettingsPane.classList.remove('show');
+    }
+
+    if (!chatHistoryPane.contains(target) && target.id !== 'history-btn') {
+        chatHistoryPane.classList.remove('show');
+    }
+}
 
 function updateClock() {
     const now = new Date();
@@ -74,6 +139,7 @@ function updateMemory(role) {
       role: role,
       content: role === "user" ? document.getElementById("input").value : document.getElementById("chat-window").lastElementChild.querySelector('.message').textContent
     });
+    updateChatHistory();
 }
 
 function clearHistory() {
@@ -437,8 +503,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('clear-btn').addEventListener('click', clearPromptInputs);
 
-    const settingsButton = document.querySelector('#settings-btn');
-    settingsButton.addEventListener('click', toggleSettings);
+    document.querySelector('#settings-btn').addEventListener('click', toggleSettings);
+    document.getElementById('history-btn').addEventListener('click', toggleChatHistory);
 
     document.addEventListener('click', handleDocumentClick);
 

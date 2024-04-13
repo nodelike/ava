@@ -164,6 +164,20 @@ select, .chat-settings-pane input {
   transition: font-size 0.1s ease; /* Optional: Adds a smooth transition effect */
 }
 
+.chat-history-pane {
+  background: #000;
+  width: 100%;
+  max-width: 349px;
+  height: 100%;
+  border-left: 1px solid var(--accent-color);
+  padding: 20px 0px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  right: -349px;
+  transition: right 0.3s ease;
+}
+
 .chat-settings-pane {
   background: #000;
   width: 100%;
@@ -178,7 +192,7 @@ select, .chat-settings-pane input {
 }
 
 
-.chat-settings-pane.show {
+.chat-settings-pane.show,  .chat-history-pane.show{
   right: 0;
 }
 

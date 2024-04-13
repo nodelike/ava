@@ -24,6 +24,9 @@
             <div class="settings-btn" id="settings-btn">
               <i class="fa fa-sharp fa-solid fa-gear"></i>
             </div>
+            <div class="new-chat-btn" id="history-btn">
+              <i class="fa-solid fa-message"></i>
+            </div>
           </div>
             <div id="chat-window">
                 <div class="msg-window">
@@ -59,7 +62,11 @@
 
         <div class="terminal-card glass-card" id="terminal"></div>
       </div>
-      
+    
+      <div class="chat-history-pane">
+        <h2>Chat History</h2>
+        <ul id="chat-session-list"></ul>
+      </div>
     <div class="chat-settings-pane">
       <input type="file" id="file-input" accept="image/*" style="display: none;">
       <span class="setting-span" style="align-items: center; flex-direction: row;">

@@ -10,12 +10,17 @@ async function updateChatHistory() {
   let sessions = [];
 
   try {
-    const response = await fetch('chat-history.json');
-    if (response.ok) {
-      sessions = await response.json();
+    const chatHistoryPath = 'chat-history.json';
+    const fileExists = await window.fileSystem.readFile(chatHistoryPath).then(() => true).catch(() => false);
+
+    if (fileExists) {
+      const response = await window.fileSystem.readFile(chatHistoryPath);
+      if (response) {
+        sessions = JSON.parse(response);
+      }
     }
   } catch (error) {
-    console.log("Failed to fetch chat-history.json");
+    console.log("Failed to fetch chat-history.json:", error);
   }
 
   if (currentSessionId == '') {
@@ -48,17 +53,14 @@ async function updateChatHistory() {
   currentSession.messages = messages;
 
   try {
-    await fetch('chat-history.json', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(sessions, null, 2),
-    });
+    const dataToWrite = JSON.stringify(sessions, null, 2);
+    await window.fileSystem.writeFile('chat-history.json', dataToWrite);
+    console.log('Chat history saved successfully');
   } catch (error) {
     console.error('Error writing to chat-history.json:', error);
   }
 }
+
 function toggleChatHistory() {
     const chatHistoryPane = document.querySelector('.chat-history-pane');
     chatHistoryPane.classList.toggle('show');
@@ -143,8 +145,9 @@ function updateMemory(role) {
 }
 
 function clearHistory() {
-    messages = [];
-    document.getElementById("chat-window").innerHTML = '';
+  currentSessionId = '';
+  messages = [];
+  document.getElementById("chat-window").innerHTML = '';
 }
 
 
@@ -504,7 +507,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('clear-btn').addEventListener('click', clearPromptInputs);
 
     document.querySelector('#settings-btn').addEventListener('click', toggleSettings);
-    document.getElementById('history-btn').addEventListener('click', toggleChatHistory);
+    document.querySelector('#history-btn').addEventListener('click', toggleChatHistory);
 
     document.addEventListener('click', handleDocumentClick);
 

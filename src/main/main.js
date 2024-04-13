@@ -3,7 +3,7 @@ const path = require('path');
 const ollama = require('ollama');
 const os = require('node-os-utils');
 const si = require('systeminformation');
-
+const fs = require('fs').promises;
 let mainWindow;
 
 function createWindow() {
@@ -82,6 +82,30 @@ ipcMain.handle('get-system-stats', async () => {
     return null;
   }
 });
+
+ipcMain.handle('read-file', async (event, filePath) => {
+  try {
+    const data = await fs.readFile(path.join(__dirname, "..", filePath), 'utf8');
+    return data;
+  } catch (error) {
+    console.error('Error reading file:', error);
+    return null;
+  }
+});
+
+ipcMain.handle('write-file', async (event, filePath, data) => {
+  try {
+    if (data === undefined) {
+      console.error('Error writing file: data is undefined');
+      return;
+    }
+    await fs.writeFile(path.join(__dirname, "..", filePath), data, 'utf8');
+  } catch (error) {
+    console.error('Error writing file:', error);
+  }
+});
+
+
 
 app.on('ready', () => {
   createWindow();

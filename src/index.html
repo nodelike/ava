@@ -16,15 +16,15 @@
   <body>
     <div class="app" id="app">
       <div class="chat-settings">
-        <div class="new-chat-btn" onclick="clearHistory()">
+        <div class="action-icons" onclick="clearHistory()">
           <i class="fa fa-sharp fa-solid fa-plus"></i>
         </div>
-        <div class="settings-btn" id="settings-btn">
+        <div class="action-icons" id="settings-btn">
           <i class="fa fa-sharp fa-solid fa-gear"></i>
         </div>
-        <div class="new-chat-btn" id="history-btn">
-          <i class="fa-solid fa-message"></i>
-        </div>
+        <div class="action-icons" id="history-btn">
+          <i class="fa fa-solid fa-message"></i>
+        </div>        
       </div>
       <div class="col-1">
         <div class="chat-container">
@@ -59,7 +59,7 @@
               <div id="clock"></div>
               <div class="system-stats glass-card">
                 <p>Battery Level: <span id="battery-level"></span></p>
-                <p>Memory Usage: <span><span id="mem-usage"></span>/<span id="mem-total"></span></span></p>
+                <p>RAM Usage: <span><span id="mem-usage"></span>/<span id="mem-total"></span></span></p>
                 <p>CPU Usage: <span id="cpu-usage"></span></p>
                 <p>CPU Temperature: <span id="cpu-temp"></span></p>
                 <p>Battery Charging: <span id="battery-charging"></span></p>

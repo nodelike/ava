@@ -126,29 +126,34 @@ async function updateChatHistory() {
   loadChats();
 }
 
-function toggleChatHistory() {
-    const chatHistoryPane = document.querySelector('.chat-history-pane');
-    chatHistoryPane.classList.toggle('show');
+function toggleSideMenu(event) {
+  event.stopPropagation();
+  const chatSettingsPane = document.querySelector('.chat-settings-pane');
+  const chatHistoryPane = document.querySelector('.chat-history-pane');
+  const target = event.currentTarget;
+
+  if (target.id === 'settings-btn') {
+      chatSettingsPane.classList.toggle('show');
+      if (chatHistoryPane.classList.contains('show')) {
+          chatHistoryPane.classList.remove('show');
+      }
+  } else if (target.id === 'history-btn') {
+      chatHistoryPane.classList.toggle('show');
+      if (chatSettingsPane.classList.contains('show')) {
+          chatSettingsPane.classList.remove('show');
+      }
+  }
 }
 
-function toggleSettings(event) {
-    event.stopPropagation();
-    const chatSettingsPane = document.querySelector('.chat-settings-pane');
-    chatSettingsPane.classList.toggle('show');
-  }
-  
 function handleDocumentClick(event) {
-    const chatSettingsPane = document.querySelector('.chat-settings-pane');
-    const chatHistoryPane = document.querySelector('.chat-history-pane');
-    const target = event.target;
+  const chatSettingsPane = document.querySelector('.chat-settings-pane');
+  const chatHistoryPane = document.querySelector('.chat-history-pane');
+  const target = event.target;
 
-    if (!chatSettingsPane.contains(target)) {
-        chatSettingsPane.classList.remove('show');
-    }
-
-    if (!chatHistoryPane.contains(target) && target.id !== 'history-btn') {
-        chatHistoryPane.classList.remove('show');
-    }
+  if (!chatSettingsPane.contains(target) && !chatHistoryPane.contains(target)) {
+      chatSettingsPane.classList.remove('show');
+      chatHistoryPane.classList.remove('show');
+  }
 }
 
 function updateClock() {
@@ -594,8 +599,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('clear-btn').addEventListener('click', clearPromptInputs);
 
-    document.querySelector('#settings-btn').addEventListener('click', toggleSettings);
-    document.querySelector('#history-btn').addEventListener('click', toggleChatHistory);
+    document.querySelector('#settings-btn').addEventListener('click', toggleSideMenu);
+    document.querySelector('#history-btn').addEventListener('click', toggleSideMenu);
 
     document.addEventListener('click', handleDocumentClick);
 

@@ -4,7 +4,8 @@ let abortController = null;
 let isStreaming = false;
 // const osimages = ['os-face.gif', 'os-face1.gif', 'os-face2.gif', 'os-face3.gif', 'os-face4.gif', 'os-face5.gif'];
 const osimages = ['os-face1.gif'];
-let currentSessionId = ''
+let currentSessionId = '';
+let currentPersonaId = '';
 
 async function loadChats(){
   let sessions = []
@@ -45,6 +46,7 @@ async function loadChatSession(sessionId) {
       const session = sessions.find(s => s.session === sessionId);
       if (session) {
         messages = session.messages;
+        currentPersonaId = session.personaId;
         renderChatMessages();
       }
     }
@@ -105,6 +107,7 @@ async function updateChatHistory() {
   if (!currentSession) {
     currentSession = {
       session: currentSessionId,
+      personaId: currentPersonaId,
       messages: []
     };
     sessions.push(currentSession);
@@ -231,85 +234,93 @@ async function updateModelDropdown() {
     }
 }
 
+
 function loadSelectedOptions() {
-    const selectedModel = localStorage.getItem('selectedModel');
-    const selectedPersona = localStorage.getItem('selectedPersona');
+  const selectedModel = localStorage.getItem('selectedModel');
+  const selectedPersonaId = localStorage.getItem('selectedPersonaId');
 
-    if (selectedModel) {
-        document.getElementById('model-list').value = selectedModel;
-    }
+  if (selectedModel) {
+      document.getElementById('model-list').value = selectedModel;
+  }
 
-    if (selectedPersona) {
-        document.getElementById('system-prompt-list').value = selectedPersona;
-        document.getElementById('system-prompt-box').value = selectedPersona;
+  if (selectedPersonaId) {
+      const promptList = JSON.parse(localStorage.getItem('systemPrompts')) || [];
+      const selectedPersona = promptList.find(prompt => prompt.id === selectedPersonaId);
+      if (selectedPersona) {
+        document.getElementById('system-prompt-list').value = selectedPersona.id;
+        document.getElementById('system-prompt-box').value = selectedPersona.content;
+        currentPersonaId = selectedPersonaId;
         adjustTextareaHeight(document.getElementById('system-prompt-box'));
-    }
+      }
+  }
 }
 
 function saveSelectedOptions() {
-    const selectedModel = document.getElementById('model-list').value;
-    const selectedPersona = document.getElementById('system-prompt-list').value;
-    localStorage.setItem('selectedModel', selectedModel);
-    localStorage.setItem('selectedPersona', selectedPersona);
+  const selectedModel = document.getElementById('model-list').value;
+  const selectedPersonaId = currentPersonaId;
+  localStorage.setItem('selectedModel', selectedModel);
+  localStorage.setItem('selectedPersonaId', selectedPersonaId);
 }
 
-function editSystemPrompt(promptName) {
-    const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
-    const promptToEdit = savedPrompts.find(prompt => prompt.name === promptName);
-    if (promptToEdit) {
-      document.getElementById('prompt-name-input').value = promptToEdit.name;
-      document.getElementById('prompt-name-input').readOnly = true;
-      document.getElementById('prompt-input').value = promptToEdit.content;
+function editSystemPrompt(promptId) {
+  const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
+  const promptToEdit = savedPrompts.find(prompt => prompt.id === promptId);
+  if (promptToEdit) {
+    document.getElementById('prompt-name-input').value = promptToEdit.name;
+    document.getElementById('prompt-name-input').readOnly = true;
+    document.getElementById('prompt-input').value = promptToEdit.content;
 
-      adjustTextareaHeight(document.getElementById('prompt-input'));
-    }
+    adjustTextareaHeight(document.getElementById('prompt-input'));
+  }
 }
 
 function loadSystemPrompts() {
-    const systemPromptList = document.getElementById('system-prompt-list');
-    const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
-    systemPromptList.innerHTML = '';
-    savedPrompts.forEach(prompt => systemPromptList.add(new Option(prompt.name, prompt.content)));
+  const systemPromptList = document.getElementById('system-prompt-list');
+  const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
+  systemPromptList.innerHTML = '';
+  savedPrompts.forEach(prompt => systemPromptList.add(new Option(prompt.name, prompt.id)));
 
-    const promptList = document.getElementById('prompt-list');
-    promptList.innerHTML = '';
-    savedPrompts.forEach(prompt => {
-        const btnDiv = document.createElement('div');
-        const listItem = document.createElement('li');
-        listItem.textContent = prompt.name;
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.addEventListener('click', () => deleteSystemPrompt(prompt.name));
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Edit';
-        editBtn.addEventListener('click', () => editSystemPrompt(prompt.name));
-        btnDiv.appendChild(editBtn);
-        btnDiv.appendChild(deleteBtn);
-        listItem.appendChild(btnDiv);
-        promptList.appendChild(listItem);
-      });
+  const promptList = document.getElementById('prompt-list');
+  promptList.innerHTML = '';
+  savedPrompts.forEach(prompt => {
+      const btnDiv = document.createElement('div');
+      const listItem = document.createElement('li');
+      listItem.textContent = prompt.name;
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', () => deleteSystemPrompt(prompt.id));
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', () => editSystemPrompt(prompt.id));
+      btnDiv.appendChild(editBtn);
+      btnDiv.appendChild(deleteBtn);
+      listItem.appendChild(btnDiv);
+      promptList.appendChild(listItem);
+    });
 
-    systemPromptList.dispatchEvent(new Event('change'));
+  systemPromptList.dispatchEvent(new Event('change'));
 }
 
+
 function saveSystemPrompt() {
-    const promptNameInput = document.getElementById('prompt-name-input');
-    const promptInput = document.getElementById('prompt-input');
-    const promptName = promptNameInput.value.trim();
-    const promptContent = promptInput.value.trim();
-    if (promptName && promptContent) {
-      const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
-      const promptIndex = savedPrompts.findIndex(prompt => prompt.name === promptName);
-      if (promptIndex !== -1) {
-        savedPrompts[promptIndex].content = promptContent;
-      } else {
-        savedPrompts.push({ name: promptName, content: promptContent });
-      }
-      localStorage.setItem('systemPrompts', JSON.stringify(savedPrompts));
-      loadSystemPrompts();
-      promptNameInput.value = promptInput.value = '';
-      promptNameInput.readOnly = false;
+  const promptNameInput = document.getElementById('prompt-name-input');
+  const promptInput = document.getElementById('prompt-input');
+  const promptName = promptNameInput.value.trim();
+  const promptContent = promptInput.value.trim();
+  if (promptName && promptContent) {
+    const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
+    const existingPrompt = savedPrompts.find(prompt => prompt.name === promptName);
+    if (existingPrompt) {
+      existingPrompt.content = promptContent;
+    } else {
+      const newPromptId = Date.now().toString(); // Generate a unique id based on timestamp
+      savedPrompts.push({ id: newPromptId, name: promptName, content: promptContent });
     }
+    localStorage.setItem('systemPrompts', JSON.stringify(savedPrompts));
+    loadSystemPrompts();
+    promptNameInput.value = promptInput.value = '';
+    promptNameInput.readOnly = false;
+  }
 }
 
 function clearPromptInputs() {
@@ -319,24 +330,26 @@ function clearPromptInputs() {
     adjustTextareaHeight(document.getElementById('prompt-input'));
 }
 
-function deleteSystemPrompt(promptName) {
-    const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
-    const updatedPrompts = savedPrompts.filter(prompt => prompt.name !== promptName);
-    localStorage.setItem('systemPrompts', JSON.stringify(updatedPrompts));
+function deleteSystemPrompt(promptId) {
+  const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
+  const updatedPrompts = savedPrompts.filter(prompt => prompt.id !== promptId);
+  localStorage.setItem('systemPrompts', JSON.stringify(updatedPrompts));
 
-    const systemPromptList = document.getElementById('system-prompt-list');
-    const selectedPromptName = systemPromptList.options[systemPromptList.selectedIndex].text;
+  const systemPromptList = document.getElementById('system-prompt-list');
+  const selectedPromptId = systemPromptList.value;
 
-    loadSystemPrompts();
+  loadSystemPrompts();
 
-    if (promptName === selectedPromptName) {
-        const systemPromptBox = document.getElementById('system-prompt-box');
-        systemPromptBox.value = systemPromptList.value;
-        adjustTextareaHeight(systemPromptBox);
-    }
+  if (promptId === selectedPromptId) {
+      const systemPromptBox = document.getElementById('system-prompt-box');
+      systemPromptBox.value = systemPromptList.options[systemPromptList.selectedIndex].text;
+      currentPersonaId = systemPromptList.value;
+      adjustTextareaHeight(systemPromptBox);
+  }
 
-    clearPromptInputs();
+  clearPromptInputs();
 }
+
 
 function toggleButtons() {
     const sendButton = document.getElementById('send');
@@ -529,29 +542,37 @@ document.querySelectorAll('.settings-dp').forEach((img, index) => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-    setRandomBackgroundImage()
-    await updateModelDropdown();
-    loadSystemPrompts();
-    loadSelectedOptions();
-    startClock();
-    loadChats();
+  setRandomBackgroundImage()
+  await updateModelDropdown();
+  loadSystemPrompts();
+  loadSelectedOptions();
+  startClock();
+  loadChats();
 
-    document.getElementById('system-prompt-box').value = document.getElementById('system-prompt-list').value;
-    adjustTextareaHeight(document.getElementById('system-prompt-box'));
+  const systemPromptList = document.getElementById('system-prompt-list');
+  const selectedPrompt = JSON.parse(localStorage.getItem('systemPrompts')).find(prompt => prompt.id === systemPromptList.value);
+  if (selectedPrompt) {
+      document.getElementById('system-prompt-box').value = selectedPrompt.content;
+      adjustTextareaHeight(document.getElementById('system-prompt-box'));
+  }
 
-    document.getElementById('model-list').addEventListener('change', function() {
-        clearHistory();
-        saveSelectedOptions();
-    });
-    
-    document.getElementById('system-prompt-list').addEventListener('change', function() {
-        const systemPromptBox = document.getElementById('system-prompt-box');
-        systemPromptBox.value = this.value;
-        adjustTextareaHeight(systemPromptBox);
-        clearHistory();
-        messages = [];
-        saveSelectedOptions();
-    });
+  document.getElementById('model-list').addEventListener('change', function() {
+      clearHistory();
+      saveSelectedOptions();
+  });
+  
+  document.getElementById('system-prompt-list').addEventListener('change', function() {
+      const systemPromptBox = document.getElementById('system-prompt-box');
+      const selectedPrompt = JSON.parse(localStorage.getItem('systemPrompts')).find(prompt => prompt.id === this.value);
+      if (selectedPrompt) {
+          systemPromptBox.value = selectedPrompt.content;
+          currentPersonaId = selectedPrompt.id;
+          adjustTextareaHeight(systemPromptBox);
+          clearHistory();
+          messages = [];
+          saveSelectedOptions();
+      }
+  });
 
     document.getElementById('prompt-input').addEventListener('input', function() {
         adjustTextareaHeight(this);

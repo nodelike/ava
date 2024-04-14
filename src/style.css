@@ -94,6 +94,7 @@ select, .chat-settings-pane input {
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 360px;
 }
 
 #clock {
@@ -107,7 +108,6 @@ select, .chat-settings-pane input {
 
 .system-stats {
   margin: 0 20px;
-  max-width: 360px;
   width: 100%;
   font-size: 15px;
   flex-direction: column;
@@ -194,6 +194,25 @@ select, .chat-settings-pane input {
 
 .chat-settings-pane.show,  .chat-history-pane.show{
   right: 0;
+}
+
+#chat-session-list li {
+  padding: 12px 15px;
+  border: 2px solid var(--accent-color);
+  margin: 15px 0;
+  cursor: pointer;
+  transition: 0.1s ease;
+}
+
+#chat-session-list li:hover {
+  background:var(--accent-color);
+}
+
+#chat-session-list {
+  padding: 0 25px;
+  margin: 0;
+  list-style: none;
+  height: 100%;
 }
 
 .setting-span{
@@ -334,8 +353,6 @@ select, .chat-settings-pane input {
   display: flex;
 }
 
-
-
 .chat-dp {
   width: 40px;
   height: 40px;
@@ -377,7 +394,7 @@ select, .chat-settings-pane input {
   color: #00ffb8;
 }
 
-.message.system{
+.message.assistant{
   color: var(--font-color);
 }
 

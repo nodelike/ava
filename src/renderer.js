@@ -1,10 +1,70 @@
-let dpPath = { user: "user.png", system: "assets/icon.ico" };
+let dpPath = { user: "user.png", assistant: "assets/icon.ico" };
 let messages = [];
 let abortController = null;
 let isStreaming = false;
 // const osimages = ['os-face.gif', 'os-face1.gif', 'os-face2.gif', 'os-face3.gif', 'os-face4.gif', 'os-face5.gif'];
 const osimages = ['os-face1.gif'];
 let currentSessionId = ''
+
+async function loadChats(){
+  let sessions = []
+
+  try {
+    const chatHistoryPath = 'chat-history.json';
+    const fileExists = await window.fileSystem.readFile(chatHistoryPath).then(() => true).catch(() => false);
+
+    if (fileExists) {
+      const response = await window.fileSystem.readFile(chatHistoryPath);
+      if (response) {
+        sessions = JSON.parse(response);
+      }
+    }
+  } catch (error) {
+    console.log("Failed to fetch chat-history.json:", error);
+  }
+
+  const chatListDiv = document.getElementById("chat-session-list");
+  chatListDiv.innerHTML = "";
+  for (const session of sessions) {
+    let li = document.createElement("li");
+    li.textContent = `chat-session-${session.session}`;
+    li.addEventListener("click", () => loadChatSession(session.session));
+    chatListDiv.appendChild(li);
+  }
+}
+
+async function loadChatSession(sessionId) {
+  currentSessionId = sessionId;
+  messages = [];
+
+  try {
+    const chatHistoryPath = 'chat-history.json';
+    const response = await window.fileSystem.readFile(chatHistoryPath);
+    if (response) {
+      const sessions = JSON.parse(response);
+      const session = sessions.find(s => s.session === sessionId);
+      if (session) {
+        messages = session.messages;
+        renderChatMessages();
+      }
+    }
+  } catch (error) {
+    console.log("Failed to load chat session:", error);
+  }
+}
+
+function renderChatMessages() {
+  const chatWindow = document.getElementById("chat-window");
+  chatWindow.innerHTML = "";
+
+  for (let i = 0; i < messages.length; i++) {
+    const message = messages[i];
+    if (i === 0 && message.role === "system") {
+      continue; // Skip the first message if it has the role "system"
+    }
+    updateChat(message.role, message.content);
+  }
+}
 
 async function updateChatHistory() {
   let sessions = [];
@@ -59,6 +119,8 @@ async function updateChatHistory() {
   } catch (error) {
     console.error('Error writing to chat-history.json:', error);
   }
+
+  loadChats();
 }
 
 function toggleChatHistory() {
@@ -132,7 +194,7 @@ function stopMessage() {
 
 function refreshDp() {
     document.querySelectorAll('.chat-dp').forEach(img => {
-        img.src = dpPath[img.closest('.msg-window').querySelector('.message').classList.contains('user') ? 'user' : 'system'];
+        img.src = dpPath[img.closest('.msg-window').querySelector('.message').classList.contains('user') ? 'user' : 'assistant'];
     });
 }
 
@@ -304,8 +366,8 @@ function updateChat(role, message = '') {
     chatWindow.appendChild(msgWindow);
     chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
   
-    if (role === "system") {
-      const codeBlocks = msgWindow.querySelectorAll('.message.system code');
+    if (role === "assistant") {
+      const codeBlocks = msgWindow.querySelectorAll('.message.assistant code');
       codeBlocks.forEach((block) => {
         block.classList.add('language-python');
         Prism.highlightElement(block);
@@ -367,7 +429,7 @@ async function sendMessage() {
     input.value = "";
     
     updateChat("user", inputVal);
-    const responseDiv = updateChat("system");
+    const responseDiv = updateChat("assistant");
 
     isStreaming = true; // Set streaming state to true
     toggleButtons();
@@ -455,7 +517,7 @@ document.querySelectorAll('.settings-dp').forEach((img, index) => {
 
             reader.onloadend = function() {
                 img.src = reader.result;
-                dpPath[index === 0 ? 'user' : 'system'] = reader.result;
+                dpPath[index === 0 ? 'user' : 'assistant'] = reader.result;
                 refreshDp();
             };
 
@@ -472,6 +534,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadSystemPrompts();
     loadSelectedOptions();
     startClock();
+    loadChats();
 
     document.getElementById('system-prompt-box').value = document.getElementById('system-prompt-list').value;
     adjustTextareaHeight(document.getElementById('system-prompt-box'));

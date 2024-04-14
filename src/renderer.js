@@ -180,10 +180,14 @@ function shuffleArray(array) {
 }
 
 function setRandomBackgroundImage() {
-    const container = document.getElementById("app")
+    // const container = document.querySelector("body");
     const shuffledImages = shuffleArray(osimages);
     const randomImage = shuffledImages[0];
-    container.style.backgroundImage = `url('assets/os-faces/${randomImage}')`;
+    document.querySelector("body").style.backgroundImage = `url('assets/os-faces/${randomImage}')`;
+    document.querySelector("body").style.backgroundRepeat = "no-repeat";
+    document.querySelector("body").style.backgroundAttachment = "fixed";
+    document.querySelector("body").style.backgroundPosition = "center";
+    document.querySelector("body").style.backgroundSize = "cover";
 }
 
 function stopMessage() {

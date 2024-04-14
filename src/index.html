@@ -15,20 +15,24 @@
   </head>
   <body>
     <div class="app" id="app">
+      <div class="chat-settings">
+        <div class="new-chat-btn" onclick="clearHistory()">
+          <i class="fa fa-sharp fa-solid fa-plus"></i>
+        </div>
+        <div class="settings-btn" id="settings-btn">
+          <i class="fa fa-sharp fa-solid fa-gear"></i>
+        </div>
+        <div class="new-chat-btn" id="history-btn">
+          <i class="fa-solid fa-message"></i>
+        </div>
+      </div>
       <div class="col-1">
         <div class="chat-container">
-          <div class="chat-settings">
-            <div class="new-chat-btn" onclick="clearHistory()">
-              <i class="fa fa-sharp fa-solid fa-plus"></i>
-            </div>
-            <div class="settings-btn" id="settings-btn">
-              <i class="fa fa-sharp fa-solid fa-gear"></i>
-            </div>
-            <div class="new-chat-btn" id="history-btn">
-              <i class="fa-solid fa-message"></i>
-            </div>
-          </div>
-            <div id="chat-window">
+
+            <div class="chat-section">
+
+              <div id="chat-window">
+
                 <div class="msg-window">
                   <img class="chat-dp" src="assets/icon.ico" alt="">
                   <div class="msg-container">
@@ -36,35 +40,39 @@
                     <div class="message system">Hey there!</div>
                   </div>
                 </div>
-            </div>
-            <div class="input-window">
-              <input id="input" type="text" placeholder="Send message" autofocus>
-              <div id="button-container">
-                <button id="send" onclick="sendMessage()">
-                  <i class="fa-solid fa-arrow-up"></i>
-                </button>
-                <button id="stop" onclick="stopMessage()" style="display: none;">
-                  <i class="fa-solid fa-square"></i>
-                </button>
+
+              </div>
+
+              <div class="input-window">
+                <input id="input" type="text" placeholder="Send message" autofocus>
+                <div id="button-container">
+                  <button id="send" onclick="sendMessage()">
+                    <i class="fa-solid fa-arrow-up"></i>
+                  </button>
+                  <button id="stop" onclick="stopMessage()" style="display: none;">
+                    <i class="fa-solid fa-square"></i>
+                  </button>
+                </div>
               </div>
             </div>
+            <div class="col-2">
+              <div id="clock"></div>
+              <div class="system-stats glass-card">
+                <p>Battery Level: <span id="battery-level"></span></p>
+                <p>Memory Usage: <span><span id="mem-usage"></span>/<span id="mem-total"></span></span></p>
+                <p>CPU Usage: <span id="cpu-usage"></span></p>
+                <p>CPU Temperature: <span id="cpu-temp"></span></p>
+                <p>Battery Charging: <span id="battery-charging"></span></p>
+              </div>
+      
+              <div class="terminal-card glass-card" id="terminal"></div>
+            </div>
         </div>
       </div>
-      <div class="col-2">
-        <div id="clock"></div>
-        <div class="system-stats glass-card">
-          <p>Battery Level: <span id="battery-level"></span></p>
-          <p>Memory Usage: <span><span id="mem-usage"></span>/<span id="mem-total"></span></span></p>
-          <p>CPU Usage: <span id="cpu-usage"></span></p>
-          <p>CPU Temperature: <span id="cpu-temp"></span></p>
-          <p>Battery Charging: <span id="battery-charging"></span></p>
-        </div>
-
-        <div class="terminal-card glass-card" id="terminal"></div>
-      </div>
+      
     
       <div class="chat-history-pane">
-        <h2>Chat History</h2>
+        <h2>History</h2>
         <ul id="chat-session-list"></ul>
       </div>
     <div class="chat-settings-pane">

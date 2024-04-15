@@ -19,6 +19,8 @@ function createWindow() {
     show: false
   });
 
+  // mainWindow.setMenu(null);
+
   mainWindow.loadFile(path.join(__dirname, '..', 'index.html'));
 
   mainWindow.once('ready-to-show', () => {

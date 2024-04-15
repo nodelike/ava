@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Graduate&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 *{
     box-sizing: border-box;
-    font-family: monospace;
+    font-family: "Roboto Mono", monospace;
 }
 
 ::-webkit-scrollbar {
@@ -80,7 +81,7 @@ select, .chat-settings-pane input {
 .col-2{
   width: 60%;
   gap: 30px;
-  justify-content: start;
+  justify-content: space-evenly;
 }
 
 .glass-card{
@@ -96,10 +97,9 @@ select, .chat-settings-pane input {
 }
 
 #clock {
-  margin-top: 45px;
   font-family: "Graduate", serif;
   font-weight: bold;
-  font-size: 6.5em;
+  font-size: 3.5em;
   text-align: center;
   color: var(--font-color);
   -webkit-text-stroke-width: 1px;

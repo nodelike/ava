@@ -105,7 +105,7 @@ select, .chat-settings-pane input {
 #clock {
   font-family: "Graduate", serif;
   font-weight: bold;
-  font-size: 3.5em;
+  font-size: 6.0em;
   text-align: center;
   color: var(--font-dark);
   -webkit-text-stroke-width: 1px;

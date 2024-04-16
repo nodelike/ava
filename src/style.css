@@ -9,6 +9,12 @@
   width: 12px; /* Width of the scrollbar */
 }
 
+::-webkit-scrollbar-track {
+  background-color: var(--primary-color); /* Color of the thumb */
+  border-radius: 12px;
+  border: 2px solid black;
+}
+
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--accent-color); /* Color of the thumb */
@@ -25,7 +31,7 @@
 
 
 :root {
-    --primary-color: rgba(0, 0, 0, 0.15);
+    --primary-color: rgba(0, 0, 0, 0.10);
     --secondary-color: rgba(0, 0, 0, 0.4);
     --accent-color: #3f3f3f;
     --font-dark: black;
@@ -101,7 +107,7 @@ select, .chat-settings-pane input {
   font-weight: bold;
   font-size: 6.5em;
   text-align: center;
-  color: var(--font-color);
+  color: var(--font-dark);
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
 }
@@ -338,7 +344,7 @@ select, .chat-settings-pane input {
 
 .chat-container{
   background: var(--primary-color);
-  backdrop-filter: blur(1.2em);
+  backdrop-filter: blur(1.0em);
   display: flex;
   border: 2px solid var(--accent-color);
   border-radius: 12px;
@@ -357,11 +363,17 @@ select, .chat-settings-pane input {
 #chat-window {
   overflow-y: scroll;
   padding: 0 30px;
-  height: calc(100% - 50px);
+  height: calc(100% - 75px);
+  margin-bottom: 25px;
 }
 
 .msg-window {
   display: flex;
+  border: 2px solid black;
+  background: var(--primary-color);
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin: 10px 0;
 }
 
 .chat-dp {
@@ -370,13 +382,12 @@ select, .chat-settings-pane input {
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid var(--accent-color);
-  margin-bottom: 15px;
 }
 
 .msg-container {
   display: flex;
   gap: 10px;
-  width: 50%;
+  width: 100%;
   font-size: 14px;
   padding: 8px 12px;
   flex: 1;
@@ -388,17 +399,20 @@ select, .chat-settings-pane input {
   color: var(--font-dark);
   margin: 0px 4px;
   text-decoration: underline;
-  font-size: 14px;
+  font-size: 15px;
   margin-top: 12px;
+  width: 15%;
+  /* text-align: right; */
 }
 
 .message {
-  font-size: 14px;
+  font-size: 15px;
   color: #000000;
   border: none;
   padding-left: 4px;
   white-space: pre-wrap;
   margin-top: 12px;
+  width: 85%;
 }
 
 .message.user{
@@ -545,7 +559,9 @@ input:focus{
 
 #prompt-list {
   list-style-type: none;
-  padding: 0;
+  padding: 0 20px;
+  max-height: 300px;
+  overflow-y: scroll;
 }
 
 #prompt-list li {

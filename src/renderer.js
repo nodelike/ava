@@ -2,11 +2,11 @@ let dpPath = { user: "user.png", assistant: "assets/icon.ico" };
 let messages = [];
 let abortController = null;
 let isStreaming = false;
-// const osimages = ['os-face.gif', 'os-face1.gif', 'os-face2.gif', 'os-face3.gif', 'os-face4.gif', 'os-face5.gif'];
 const osimages = ['os-face1.gif'];
 let currentSessionId = '';
 let currentPersonaId = '';
 
+// Chat History
 async function loadChats(){
   let sessions = []
 
@@ -55,16 +55,49 @@ async function loadChatSession(sessionId) {
   }
 }
 
-function renderChatMessages() {
+async function renderChatMessages() {
   const chatWindow = document.getElementById("chat-window");
   chatWindow.innerHTML = "";
+
+  const personaName = await getPersonaName(currentPersonaId);
 
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i];
     if (i === 0 && message.role === "system") {
       continue; // Skip the first message if it has the role "system"
     }
-    updateChat(message.role, message.content);
+    updateChatWithPersona(message.role, message.content, personaName);
+  }
+}
+
+async function getPersonaName(personaId) {
+  const savedPrompts = JSON.parse(localStorage.getItem('systemPrompts')) || [];
+  const selectedPersona = savedPrompts.find(prompt => prompt.id === personaId);
+  return selectedPersona ? selectedPersona.name : 'Assistant';
+}
+
+function updateChatWithPersona(role, message = '', personaName) {
+  const chatWindow = document.getElementById("chat-window");
+  const msgWindow = document.createElement('div');
+  msgWindow.className = "msg-window";
+  msgWindow.innerHTML = `
+    <img class="chat-dp ${role}" src="${dpPath[role]}">
+    <div class="msg-container">
+      <h3>${role === "user" ? "You" : personaName}</h3>
+      <div class="message ${role}">${message}</div>
+    </div>
+  `;
+
+  chatWindow.appendChild(msgWindow);
+  chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+
+  if (role === "assistant") {
+    const codeBlocks = msgWindow.querySelectorAll('.message.assistant code');
+    codeBlocks.forEach((block) => {
+      block.classList.add('language-python');
+      Prism.highlightElement(block);
+    });
+    return msgWindow.querySelector('.message');
   }
 }
 
@@ -126,6 +159,7 @@ async function updateChatHistory() {
   loadChats();
 }
 
+// Side Menu
 function toggleSideMenu(event) {
   event.stopPropagation();
   const chatSettingsPane = document.querySelector('.chat-settings-pane');
@@ -156,6 +190,7 @@ function handleDocumentClick(event) {
   }
 }
 
+// Clock
 function updateClock() {
     const now = new Date();
     let hours = now.getHours();
@@ -176,6 +211,7 @@ function startClock() {
     setInterval(updateClock, 1000);
 }
 
+// Background Image
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -195,6 +231,7 @@ function setRandomBackgroundImage() {
     document.querySelector("body").style.backgroundSize = "cover";
 }
 
+// Messaging
 function stopMessage() {
     if (abortController) {
         abortController.abort();
@@ -224,7 +261,6 @@ function clearHistory() {
   document.getElementById("chat-window").innerHTML = '';
 }
 
-
 async function updateModelDropdown() {
     try {
       const response = await window.ollamaAPI.list();
@@ -242,7 +278,6 @@ async function updateModelDropdown() {
       console.error('Error:', error);
     }
 }
-
 
 function loadSelectedOptions() {
   const selectedModel = localStorage.getItem('selectedModel');
@@ -310,7 +345,6 @@ function loadSystemPrompts() {
   systemPromptList.dispatchEvent(new Event('change'));
 }
 
-
 function saveSystemPrompt() {
   const promptNameInput = document.getElementById('prompt-name-input');
   const promptInput = document.getElementById('prompt-input');
@@ -358,7 +392,6 @@ function deleteSystemPrompt(promptId) {
 
   clearPromptInputs();
 }
-
 
 function toggleButtons() {
     const sendButton = document.getElementById('send');
